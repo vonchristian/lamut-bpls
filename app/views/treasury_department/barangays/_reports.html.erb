@@ -1,0 +1,17 @@
+<div class="tab-pane" id="barangay-reports">
+  <%= link_to 'List of Registered Busineses', registered_business_reports_path(format: 'pdf', barangay: @barangay) %>
+  <small class="help-block"> Generate Report for registered busineses located in this barangay. </small>
+  <br>
+  <%= link_to 'List of Unrenewed Busineses', unregistered_business_reports_path(format: 'pdf', barangay: @barangay) %>
+  <small class="help-block"> Generate Report for unrenewed businesses located in this barangay. </small>
+  <br>
+  <%= link_to 'List of Retired Businesses', retired_business_reports_path(format: 'pdf', barangay: @barangay) %>
+  <small class="help-block"> Generate Report for retired businesses located in this barangay. </small>
+  <hr>
+  <%= link_to 'List of Businesses Owned By Women', owned_by_women_business_reports_path(format: 'pdf', barangay: @barangay) %>
+  <small class="help-block"> Generate Report for businesses owned by women located in this barangay. </small>
+  <hr>
+  <%= link_to 'List of All Businesses', business_reports_path(format: 'pdf', barangay: @barangay) %>
+  <small class="help-block"> Generate Report for all businesses located in this barangay. </small>
+  <hr>
+</div>

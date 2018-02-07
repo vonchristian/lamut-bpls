@@ -1,0 +1,107 @@
+<% breadcrumb :business_permits %>
+<div class="row">
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa fa-building"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Businesses</span>
+        <span class="info-box-number"><%=Business.count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">With Permits</span>
+        <span class="info-box-number"><%=Business.registered(from_date: Time.zone.now.beginning_of_year.beginning_of_day, to_date: Time.zone.now.end_of_year.end_of_day).count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+
+  <!-- fix for small devices only -->
+  <div class="clearfix visible-sm-block"></div>
+  <%= link_to monitoring_unrenewed_businesses_path do %>
+
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow"><i class="fa fa-info"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text text-muted">No Permits</span>
+        <span class="info-box-number text-muted"><%= Business.unrenewed.count %>
+</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <% end %>
+  <!-- /.col -->
+  <%= link_to monitoring_closed_businesses_path do %>
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text text-muted">Closed</span>
+        <span class="info-box-number text-muted"><%= Business.closed.count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <% end %>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Business Permits </h3>
+      </div>
+      <div class="box-body">
+        <div class="table table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> Permit # </th>
+                <th> Business </th>
+                <th> Taxpayer </th>
+                <th> Date Approved </th>
+                <th> Prepared By </td>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @business_permits.each do |permit| %>
+                <tr>
+                  <td> <%= permit.permit_number %> </td>
+                  <td> <%= permit.business_name %> </td>
+                  <td> <%= permit.business_taxpayers_full_name %></td>
+                  <td> <%= permit.date_approved.strftime("%B %e, %Y") %> </td>
+                  <td> <%= permit.approver.try(:full_name) %></td>
+                  <td>
+                    <% if policy([:businesses, :business_permit_application]).new?  && !permit.expired? %>
+                    <%=link_to 'Issue', business_permit_path(permit, format: 'pdf'), class: "btn btn-primary" %>
+                   <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

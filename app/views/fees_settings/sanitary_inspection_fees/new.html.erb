@@ -1,0 +1,7 @@
+<%= simple_form_for @sanitary_inspection_fee, url: :fees_settings_sanitary_inspection_fees do |f| %>
+  <%= f.error_notification %>
+  <%=f.input :minimum_area %>
+  <%=f.input :maximum_area %>
+  <%= f.input :amount %>
+  <%= f.submit 'Create Sanitary Inspection Fee' %>
+<% end %>

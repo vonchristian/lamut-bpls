@@ -1,0 +1,98 @@
+<% breadcrumb :monitoring %>
+<div class="row">
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><i class="fa fa-building"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Businesses</span>
+        <span class="info-box-number"><%=Business.count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Registered</span>
+        <span class="info-box-number"><%=Business.registered(from_date: Time.zone.now.beginning_of_year.beginning_of_day, to_date: Time.zone.now.end_of_year.end_of_day).count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+
+  <!-- fix for small devices only -->
+  <div class="clearfix visible-sm-block"></div>
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow"><i class="fa fa-info"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text text-muted">Unrenewed</span>
+        <span class="info-box-number text-muted"><%= Business.unrenewed.count %>
+</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+  <%#= link_to monitoring_closed_businesses_path do %>
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text text-muted">Closed</span>
+        <span class="info-box-number text-muted"><%= Business.closed.count %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+    <%# end %>
+</div>
+<!-- /.row -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-solid">
+      <div class="box-header">
+        <h3 class="box-title">Businesses in Barangays </h3>
+      </div>
+      <div class="box-body">
+        <div class="table table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th> Barangay </th>
+                <th> Registered </th>
+                <th> Unrenewed</th>
+                <th> Closed </th>
+                <th> Total </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @barangays.each do |barangay| %>
+                <tr>
+                  <td> <%=link_to barangay.name, monitoring_barangay_path(barangay) %></td>
+                  <td> <span class="text-green"><%= barangay.businesses.registered.count %> </span></td>
+                  <td> <span class="text-danger"><%= barangay.businesses.unrenewed.count %></span></td>
+                  <td> <span class="text-danger"><%= barangay.businesses.closed.count %></span></td>
+                  <td> <%= barangay.businesses.count %> </td>
+
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-solid">
+      <div class="box-header">
+        <h3 class="box-title"> Application Details </h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          </div>
+          <div class="col-md-5">
+            <%= simple_form_for @application, url: :special_permit_applications do |f| %>
+              <%= f.error_notification %>
+              <p class="text-muted"> Taxpayer Details </p>
+              <%= f.input :first_name, required: true %>
+              <%= f.input :middle_name %>
+              <%= f.input :last_name %>
+              <%= f.input :date_of_birth, as: :string, input_html: { class: "datepicker" }%>
+              <%= f.input :sex, collection: Taxpayer.sexes.keys.to_a.map{|a| [ a.titleize, a] }, as: :radio_buttons %>
+              <hr>
+              <p class="text-muted"> Contact Details </p>
+              <%= f.input :email %>
+              <%= f.input :contact_number %>
+              <hr>
+              <p class="text-muted"> Taxpayer Address Details </p>
+              <%= f.input :address_sitio, label: "Sitio" %>
+              <%= f.input :address_barangay, collection: Addresses::Barangay.all.map{ |a| [a.name.titleize, a.id] } %>
+              <%= f.input :address_municipality, label: "Municipality", input_html: {value: "Lamut" } %>
+              <%= f.input :address_province, input_html: {value: "Ifugao" } %>
+              <hr>
+              <p class="text-muted"> Permit Details </p>
+              <%= f.input :special_permit_id, label: "Select Special Permit", collection: SpecialPermit.all.map{ |a| [a.name.titleize, a.id] }, as: :radio_buttons %>
+              <%= f.input :number_of_days %>
+              <%= f.input :location %>
+              <%= f.input :start_date, as: :string, input_html: { class: "datepicker" } %>
+              <%= f.input :end_date, as: :string, input_html: { class: "datepicker" } %>
+              <div class="box-footer">
+                <%= f.submit "Save Application", class: "btn btn-primary btn-flat" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

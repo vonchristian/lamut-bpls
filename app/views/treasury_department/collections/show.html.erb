@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-solid">
+    <div class="box-header">
+    </div>
+    <div class="box-body">
+      <p class="text-muted">Collection Details </p>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Collector
+        </div>
+        <div class="col-md-6">
+          <%=image_tag(@collection.recorder.avatar.url(:large), class: "img-circle", height: 35, width: 35) %> &nbsp; &nbsp;
+          <%= @collection.recorder.try(:full_name) %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          OR Number
+        </div>
+        <div class="col-md-6">
+          <%= @collection.reference_number %>
+           <% if current_user == @collection.recorder %>
+              <span class="pull-right"> <%=link_to edit_treasury_department_collection_path(@collection) do %>
+                <span class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> Edit </span>
+                <% end %>
+                
+              </span>
+            <% end %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Date Collected
+        </div>
+        <div class="col-md-6">
+          <%= @collection.entry_date.strftime("%B %e, %Y") %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Taxpayer
+        </div>
+        <div class="col-md-6">
+          <%= @collection.commercial_document.try(:taxpayer_full_name) %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Contact Number
+        </div>
+        <div class="col-md-6">
+          <%= @collection.commercial_document.try(:taxpayer_contact_number) %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Address
+        </div>
+        <div class="col-md-6">
+          <%= @collection.commercial_document.try(:taxpayer_full_address) %>
+        </div>
+      </div>
+      <hr>
+
+<% @collection.credit_amounts.order(amount: :asc).each do |amount| %>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      <%= amount.account.name.gsub("Accounts Receivable - ", "").singularize %>
+    </div>
+    <div class="col-md-2">
+      <span class="pull-right"> <%= number_to_currency amount.amount %></span>
+    </div>
+  </div>
+  <br>
+<% end %>
+<hr>
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-8">
+    <b>TOTAL</b>
+  </div>
+  <div class="col-md-2">
+    <span class="pull-right"><b><%= number_to_currency @collection.credit_amounts.sum(:amount) %></b></span>
+  </div>
+</div>
+<br>

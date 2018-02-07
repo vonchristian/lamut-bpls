@@ -1,0 +1,8 @@
+<%= simple_form_for @address do |f| %>
+  <%= f.input :street, label: 'Street/Sitio' %>
+  <%= f.input :barangay_id, collection: Addresses::Barangay.in_lamut.map{|a| [a.name.titleize, a.id]}, prompt: "Select Barangay" %>
+
+  <%= f.input :municipality_or_city_id, input_html: { value: Addresses::MunicipalityOrCity.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+              <%= f.input :province_id, input_html: { value: Addresses::Province.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+  <%= f.submit "Update Address" %>
+<% end %>

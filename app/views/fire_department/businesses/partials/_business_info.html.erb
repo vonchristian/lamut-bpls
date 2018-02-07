@@ -1,0 +1,223 @@
+<div class="tab-pane" id='info'>
+  <div class="row">
+    <div class="col-md-6 border-right">
+      <div class="row">
+        <div class="col-md-6">
+          <h4 class="header-title"> Business Activities </h4>
+          <span class="text-muted">List of business activities </span>
+        </div>
+      </div>
+      <br>
+      <% @business.business_activities.each do |business_activity| %>
+        <div class="row">
+          <div class="col-md-1">
+            <span class="badge bg-navy"><%= business_activity.number_of_unit %></span>
+          </div>
+          <div class="col-md-6">
+            <p><%= business_activity.name %></p>
+          </div>
+          <div class="col-md-2">
+            <span class="text-muted pull-right"><%= number_to_currency business_activity.total_fees %></span>
+          </span>
+          </div>
+        </div>
+        <br>
+      <% end %>
+      <div class="row">
+        <div class="col-md-7">
+          <b>MAYORS PERMIT FEE</b>
+        </div>
+        <div class="col-md-2">
+          <b><%=number_to_currency @business.mayors_permit_fees.total %></b>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5 col-md-offset-1 ">
+      <div class="row">
+        <div class="col-md-8">
+          <h4>Gross Sales </h4>
+          <span class="text-muted"> Business Gross Sales from preceding years </span>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-3">
+          Calendar Year
+        </div>
+        <div class="col-md-4">
+          <span class="pull-right">Gross Sale </span>
+        </div>
+        <div class="col-md-4">
+          <span class="pull-right">Tax </span>
+        </div>
+      </div>
+      <hr>
+      <% @business.gross_sales.each do |gross_sale| %>
+        <div class="row">
+          <div class="col-md-3">
+            <p><span class="label bg-navy"><%= gross_sale.calendar_year.strftime("%Y") %></span></p>
+          </div>
+          <div class="col-md-4">
+            <span class="pull-right"><%= number_to_currency gross_sale.amount %></span>
+          </div>
+          <div class="col-md-4">
+            <% if @business.cooperative? %>
+              <span class="pull-right label bg-red"> Exempted </span>
+            <% else %>
+              <span class="pull-right"><%=number_to_currency gross_sale.tax_amount %></span>
+            <% end %>
+          </div>
+        </div>
+        <br>
+      <% end %>
+    </div>
+  </div>
+  <HR>
+  <h4> Type of Organization </h4>
+    <%= @business.ownership_type_name %>
+  <hr>
+  <h4> Mode of Payment </h4>
+    <%= @business.mode_of_payment.try(:mode) %>
+  <hr>
+  <h4>Business Category</h4>
+  <%= @business.gross_sales_tax_business_category_name %>
+  <hr>
+    <h4> Business Area </h4>
+    <% if @business.public_market_vendor? %>
+      <div class="row">
+        <div class="col-md-3">
+          <p> Public Market Vendor </p>
+        </div>
+        <div class="col-md-9">
+          <%= @business.public_market_vendor? %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <p> Vendor Type</p>
+        </div>
+        <div class="col-md-9">
+          <%= @business.public_market_tenant.vendor_type %>
+        </div>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-3">
+        <p> Business Area (in sq.m.) </p>
+      </div>
+      <div class="col-md-9">
+        <%= @business.business_area.try(:area)  %> sq. m.
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <p> Rented </p>
+      </div>
+      <div class="col-md-9">
+        <%= @business.rented? %>
+      </div>
+    </div>
+
+  <% if @business.rented? %>
+  <div class="row">
+    <div class="col-md-3">
+      <p> Monthly Rent </p>
+    </div>
+    <div class="col-md-9">
+      <%= number_to_currency @business.rent.try(:monthly_rent) %>
+    </div>
+  </div>
+    <div class="row">
+      <div class="col-md-3">
+        <p> Lessor Full Name </p>
+      </div>
+      <div class="col-md-9">
+        <%= @business.lessor_full_name %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <p> Lessor Address </p>
+      </div>
+      <div class="col-md-9">
+        <%= @business.lessor_address %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <p> Lessor Contact Number </p>
+      </div>
+      <div class="col-md-9">
+        <%= @business.lessor_contact_number %>
+      </div>
+    </div>
+  <% end %>
+  <hr>
+  <% if @business.cockpit? && @business.cockpit_detail.present? %>
+    <h4> Cockpit Details </h4>
+    <div class="row">
+      <div class="col-md-3">
+        Promoter
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.promoter_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Pit Manager
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.pit_manager_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Referee
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.referee_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Bet Taker
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.bet_taker_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Gaffer
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.gaffer_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Cashier
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.cashier_count %></span>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-3">
+        Derby
+      </div>
+      <div class="col-md-1">
+        <span class="pull-right"><%= @business.cockpit_detail.derby_count %></span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <hr>
+</div>

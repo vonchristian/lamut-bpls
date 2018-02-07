@@ -1,0 +1,6 @@
+<%= simple_form_for @fire_safety_inspection_fee_config, url: :bplo_section_configs_fire_safety_inspection_fee_configs do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :percent %>
+  <span class="text-muted help-block"> Convert to decimal </span>
+  <%= f.submit "Save" %>
+<% end %>

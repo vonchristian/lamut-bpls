@@ -1,0 +1,115 @@
+<% breadcrumb :settings %>
+
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header">
+              <div class="widget-user-image">
+                <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+              </div>
+              <!-- /.widget-user-image -->
+                <%=link_to business_path(@business) do %>
+                  <h3 class="widget-user-username" title="Back to business profile page" data-toggle="tooltip" data-placement="left"> <%= @business.name.try(:upcase) %></h3>
+                  <h5 class="widget-user-desc text-muted"><%= @business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+                <% end %>
+            </div>
+            <div class="box-body">
+
+
+        <%=form_tag new_bplo_section_business_business_activity_path(@business), method: :get, class: "search-form" do %>
+          <div class="input-group">
+            <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search for line of business..." %>
+            <span class="input-group-btn">
+              <%= button_tag(type: 'submit', id: "search-btn", class: "btn btn-flat") do %>
+                <i class="fa fa-search"></i>
+              <% end %>
+            </span>
+          </div>
+        <% end %>
+        <br>
+        <% if params[:search].present? %>
+          <% @line_of_businesses.all.each do |line_of_business| %>
+            <div class="row">
+              <div class="col-md-6 col-md-offset-1">
+                <%= line_of_business.name %><br>
+                <small class="text-muted"><%= line_of_business.mayors_permit_fee_business_category_name %></small>
+              </div>
+              <div class="col-md-1">
+                <%= number_to_currency line_of_business.mayors_permit_fee_amount %>
+              </div>
+              <div class="col-md-4">
+                <%= simple_form_for [@business, @activity], url: :bplo_section_business_business_activities do |f| %>
+                  <div class="col-md-8">
+                    <% if line_of_business.has_storage_permit_fee? %>
+                      <%= f.input :volume, label: false, placeholder: "Volume", as: :string, autofocus: true %>
+                    <% else %>
+                      <%= f.input :number_of_unit, label: false, as: :string, autofocus: true %>
+                    <% end %>
+                  </div>
+                  <div class="col-md-4">
+                    <%= f.input :line_of_business_id, input_html: { value: line_of_business.id }, as: :hidden %>
+                    <% if @business.line_of_businesses.include?(line_of_business) %>
+                      <span class="label bg-green">Added</span>
+                    <% else %>
+                      <%= f.submit "Add", class: "btn btn-primary btn-flat" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <hr>
+          <% end %>
+        <% else %>
+          <% BploSection::Settings::MayorsPermitFeeBusinessCategory.all.each do |category| %>
+           <small class="text-muted"><%=category.name.try(:upcase) %></small>
+           <br>
+            <% category.line_of_businesses.all.each do |line_of_business| %>
+              <div class="row">
+                <div class="col-md-6 col-md-offset-1">
+                  <%= line_of_business.name %>
+                </div>
+                <div class="col-md-1">
+                  <%= number_to_currency line_of_business.mayors_permit_fee_amount %>
+                </div>
+                <div class="col-md-4">
+                  <%= simple_form_for [@business, @activity], url: :bplo_section_business_business_activities do |f| %>
+                    <div class="col-md-6">
+                      <% if line_of_business.has_storage_permit_fee? %>
+                        <%= f.input :volume, label: false, placeholder: "In Liters", as: :string %>
+                      <% else %>
+                        <%= f.input :number_of_unit, label: false, as: :string %>
+                      <% end %>
+
+                    </div>
+                    <div class="col-md-6">
+                      <%= f.input :line_of_business_id, input_html: { value: line_of_business.id }, as: :hidden %>
+                      <% if @business.line_of_businesses.include?(line_of_business) %>
+                        <span class="label bg-green">Added</span>
+                      <% else %>
+                        <%= f.submit "Add", class: "btn btn-primary btn-flat" %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <hr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var checkbox = document.getElementById('business_business_area_attributes_rented');
+  var details_div = document.getElementById('rent_details');
+  checkbox.onchange = function() {
+     if(this.checked) {
+       details_div.style['display'] = 'block';
+     } else {
+       details_div.style['display'] = 'none';
+     }
+  };
+</script>

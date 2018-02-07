@@ -1,0 +1,5 @@
+<%= simple_form_for @mode_of_payment, url: :bplo_section_settings_mode_of_payments do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :mode %>
+  <%= f.submit "Save" %>
+<% end %>

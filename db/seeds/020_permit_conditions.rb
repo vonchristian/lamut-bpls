@@ -1,0 +1,6 @@
+PermitCondition.find_or_create_by(content: "This permit is not valid if not signed by the Municipal Mayor.", default_condition: true)
+PermitCondition.find_or_create_by(content: "This permit must be displayed in a conspicous place within the business establsihment.", default_condition: true)
+PermitCondition.find_or_create_by(content: "This permit is not valid if there is/are any alteration/s, addition/s, or erasure/s or the tax, fees/charges are not paid as required under the existing ordinance.", default_condition: true)
+PermitCondition.find_or_create_by(content: "This permit is subject to compliance by permittee to all exisiting laws, ordinances, rules, and regulations on the business, trade or calling granted to the permittee.", default_condition: true)
+PermitCondition.find_or_create_by(content: "Permittee shall notify the Business Permits Licensing Office not later than the date of retirement and surrender this permit including previous permits issued to him/her upon discontinuance or retirement from business, trade or occupation herein permitted.", default_condition: true)
+PermitCondition.find_or_create_by(content: "THIS PERMIT IS NON-TRANSFERRABLE.", default_condition: true)

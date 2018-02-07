@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Type of Organization Details </h3>
+      </div>
+      <div class="box-body">
+        <%= simple_form_for @ownership_type, url: :bplo_section_settings_ownership_types do |f| %>
+          <%= f.error_notification %>
+          <%= f.input :name %>
+          <div class="box-footer">
+            <%= f.submit "Save", class: "btn btn-danger pull-right btn-flat", data: { disable_with: "Saving..."} %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

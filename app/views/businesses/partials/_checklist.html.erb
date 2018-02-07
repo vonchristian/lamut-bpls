@@ -1,0 +1,652 @@
+<div class="tab-pane <%= 'active' if current_page?(business_path(@business))%>"  id='checklist'>
+
+  <div class="row">
+    <div class="col-md-5">
+      <div class="row">
+        <div class="col-md-9">
+          <h4> Taxes and Fees </h4>
+          <p class="text-muted"> List of applicable fees and taxes </p>
+        </div>
+        <div class="col-md-3">
+          <% if policy([:businesses, :business_fee]).create?  %>
+            <%= link_to new_bplo_section_business_business_fee_path(@business), title: 'Add Additional Fee' do %>
+              <span class="pull-right fa-2x" title="Add Additional Fee" data-toggle="tooltip"><i class="fa fa-plus-circle"></i></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <br>
+      <small class="text-muted">&nbsp; &nbsp; FEES </small><p></p>
+
+      <% @business.business_fees.each do |fee| %>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            <%= fee.name %>
+          </div>
+          <div class="col-md-2">
+            <span class="pull-right"><%=number_to_currency fee.amount %></span>
+          </div>
+          <div class="col-md-1">
+            <% if !fee.default_fee?  && policy([:businesses, :business_fee]).destroy?  %>
+              <%= link_to business_fee_path(fee), method: :delete, title: "Remove Fee", data: {confirm: "Are you sure you want to remove this fee?"} do %>
+                <span class="text-danger" title="Remove Fee" data-toggle="tooltip"><i class="fa fa-trash"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+      <% end %>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          Mayors Permit Fee
+        </div>
+        <div class="col-md-2">
+          <span class="pull-right"><%=number_to_currency @business.mayors_permit_fees.total %></span>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          Sanitary Inspection Fee
+        </div>
+        <div class="col-md-2">
+          <span class="pull-right"><%=number_to_currency @business.business_area_fee %></span>
+        </div>
+      </div>
+      <br>
+      <% if @business.has_storage_permit_fee? %>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Storage Permit Fee
+          </div>
+          <div class="col-md-2">
+            <span class="pull-right"><%=number_to_currency @business.storage_permit_fees.total %></span>
+          </div>
+        </div>
+        <br>
+      <% end %>
+      <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Zoning Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.zoning_fees.for_current_year.zero? && policy([:fees, :zoning_fee]).create? %>
+              <%=link_to new_bplo_section_business_zoning_fee_path(@business), title: 'Assess Building Permit Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Zoning Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.zoning_fees.for_current_year %></span>
+                <% if @business.zoning_fees.present? && policy([:fees, :zoning_fee]).create? %>
+                  <%=link_to edit_zoning_fee_path(@business.zoning_fees.order(created_at: :asc).last), title: 'Edit Zoning Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Zoning Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+              <% end %>
+          </div>
+        </div>
+        <br>
+      <small class="text-muted">&nbsp; &nbsp; ENGINEERING OFFICE</small><p></p>
+
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Building Permit Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.building_permit_fees.for_current_year.zero?  &&  policy([:fees, :building_permit_fee]).create? %>
+            <%=link_to new_bplo_section_business_building_permit_fee_path(@business), title: 'Assess Building Permit Fee' do %>
+              <span class="btn btn-primary btn-xs" title="Assess Building Permit Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+            <% end %>
+            <% else %>
+              <span class="pull-right"><%=number_to_currency @business.building_permit_fees.for_current_year %></span>
+              <% if @business.building_permit_fees.present? && policy([:fees, :building_permit_fee]).create? %>
+                <%=link_to edit_building_permit_fee_path(@business.building_permit_fees.order(created_at: :asc).last), title: 'Edit Building Permit Fee' do %>
+                  <span class="btn btn-warning btn-xs" title="Edit Building Permit Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Annual Inspection Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.annual_inspection_fees.for_current_year.zero? && policy([:fees, :annual_inspection_fee]).create? %>
+              <%=link_to new_bplo_section_business_annual_inspection_fee_path(@business), title: 'Assess Annual Inspection Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Annual Inspection Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.annual_inspection_fees.for_current_year %></span>
+                <% if @business.annual_inspection_fees.present? && policy([:fees, :annual_inspection_fee]).create? %>
+                  <%=link_to edit_annual_inspection_fee_path(@business.annual_inspection_fees.order(created_at: :asc).last), title: 'Edit Annual Inspection Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Annual Inspection Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+              <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Occupancy Permit Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.occupancy_permit_fees.for_current_year.zero? && policy([:fees, :occupancy_permit_fee]).create? %>
+              <%=link_to new_bplo_section_business_occupancy_permit_fee_path(@business), title: 'Assess Occupancy Permit Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Occupancy Permit Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.occupancy_permit_fees.for_current_year %></span>
+                  <% if @business.occupancy_permit_fees.present? && policy([:fees, :occupancy_permit_fee]).create? %>
+                   <%=link_to edit_occupancy_permit_fee_path(@business.occupancy_permit_fees.order(created_at: :asc).last), title: 'Edit Occupancy Permit Fee' do %>
+                      <span class="btn btn-warning btn-xs" title="Edit Occupancy Permit Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                    <% end %>
+                  <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+             Electrical Installation Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.electrical_installation_fees.for_current_year.zero? && policy([:fees, :electrical_installation_fee]).create? %>
+              <%=link_to new_bplo_section_business_electrical_installation_fee_path(@business), title: 'Assess Electrical Installation Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Electrical Installation Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.electrical_installation_fees.for_current_year %></span>
+                <% if @business.electrical_installation_fees.present? && policy([:fees, :electrical_installation_fee]).create? %>
+                 <%=link_to edit_electrical_installation_fee_path(@business.electrical_installation_fees.order(created_at: :asc).last), title: 'Edit Electrical Installation Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Electrical Installation Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+             Plumbing Installation Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.plumbing_installation_fees.for_current_year.zero? && policy([:fees, :plumbing_installation_fee]).create? %>
+              <%=link_to new_bplo_section_business_plumbing_installation_fee_path(@business), title: 'Assess Plumbing Installation Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Plumbing Installation Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.plumbing_installation_fees.for_current_year %></span>
+                <% if @business.plumbing_installation_fees.present? && policy([:fees, :plumbing_installation_fee]).create? %>
+                 <%=link_to edit_plumbing_installation_fee_path(@business.plumbing_installation_fees.order(created_at: :asc).last), title: 'Edit Plumbing Installation Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Plumbing Installation Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+             Other Accessories Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.other_accessories_fees.for_current_year.zero? && policy([:fees, :other_accessories_fee]).create? %>
+              <%=link_to new_bplo_section_business_other_accessories_fee_path(@business), title: 'Assess Other Accessories Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Other Accessories Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.other_accessories_fees.for_current_year %></span>
+                <% if @business.other_accessories_fees.present? && policy([:fees, :other_accessories_fee]).create? %>
+                 <%=link_to edit_other_accessories_fee_path(@business.other_accessories_fees.order(created_at: :asc).last), title: 'Edit Other Accessories Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Other Accessories Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+             Engineering Penalties/Surchages
+          </div>
+          <div class="col-md-2">
+            <%if @business.engineering_penalties.for_current_year.zero? && policy([:fees, :engineering_penalty]).create? %>
+              <%=link_to new_bplo_section_business_engineering_penalty_path(@business), title: 'Assess Engineering Penalty Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Engineering Penalty Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.engineering_penalties.for_current_year %></span>
+                <% if @business.engineering_penalties && policy([:fees, :engineering_penalty]).create? %>
+                  <%=link_to edit_engineering_penalty_path(@business.engineering_penalties.order(created_at: :asc).last), title: 'Edit Engineering Penalty' do %>
+                      <span class="btn btn-warning btn-xs" title="Edit Engineering Penalty" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                    <% end %>
+                  <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Documentary Stamp Fee
+          </div>
+          <div class="col-md-2">
+            <%if @business.documentary_stamp_fees.for_current_year.zero? && policy([:fees, :documentary_stamp_fee]).create?  %>
+              <%=link_to new_bplo_section_business_documentary_stamp_fee_path(@business), title: 'Assess Documentary Stamp Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Documentary Stamp Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                  <span class="pull-right"><%=number_to_currency @business.documentary_stamp_fees.for_current_year %></span>
+                  <% if @business.documentary_stamp_fees.present? && policy([:fees, :documentary_stamp_fee]).create? %>
+                    <%=link_to edit_documentary_stamp_fee_path(@business.documentary_stamp_fees.last), title: 'Edit Documentary Stamp Fee' do %>
+                      <span class="btn btn-warning btn-xs" title="Edit Documentary Stamp Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                    <% end %>
+                  <% end %>
+              <% end %>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Sealing Fee (Weights and Measures)
+          </div>
+          <div class="col-md-2">
+            <%if @business.sealing_fees.for_current_year.zero? && policy([:fees, :documentary_stamp_fee]).create? %>
+              <%=link_to new_bplo_section_business_sealing_fee_path(@business), title: 'Assess Sealing Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Sealing Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @business.sealing_fees.for_current_year %></span>
+                <% if @business.sealing_fees.present? && policy([:fees, :documentary_stamp_fee]).create?  %>
+                  <%=link_to edit_sealing_fee_path(@business.sealing_fees.last), title: 'Edit Sealing Fee' do %>
+                    <span class="btn btn-warning btn-xs" title="Edit Sealing Fee" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit </span>
+                  <% end %>
+                <% end %>
+              <% end %>
+          </div>
+        </div>
+        <br>
+        <% if @business.cockpit? %>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+              Cockpit Operation Fee
+            </div>
+            <div class="col-md-2">
+                <span class="pull-right"><%=number_to_currency CockpitDetail.set_cockpit_operation_fees(@business) %></span>
+            </div>
+          </div>
+        <% end %>
+        <br>
+      <small class="text-muted">&nbsp; &nbsp; TAXES </small><p></p>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          Business Tax
+        </div>
+        <div class="col-md-2">
+          <% if @business.cooperative? || @business.business_tax_exempted? %>
+            <span class="pull-right label bg-red"> Exempted </span>
+          <% else %>
+            <span class="pull-right"><%=number_to_currency @business.gross_sales.total_tax %></span>
+          <% end %>
+        </div>
+      </div>
+      <br>
+      <small class="text-danger">&nbsp; &nbsp; SURCHARGES </small><p></p>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-4">
+          Surcharges
+        </div>
+        <div class="col-md-4">
+          <%if policy([:businesses, :surcharge]).create?  && @business.late_registration? %>
+            <%=link_to new_bplo_section_business_surcharge_path(@business), title: 'Assess Surchages' do %>
+              <span class="btn btn-danger btn-xs pull-left" title="Assess Surcharges" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-md-2">
+            <span class="pull-right"><%=number_to_currency @business.total_surcharges %></span>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-4">
+          Interests
+        </div>
+        <div class="col-md-4">
+          <% if policy([:businesses, :late_registration_interest]).create?  && @business.late_registration? %>
+            <%=link_to new_bplo_section_business_late_registration_interest_path(@business), title: 'Assess Interests' do %>
+              <small><span class="btn btn-xs btn-danger pull-left" title="Assess Interests" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span></small>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-md-2">
+          <span class="pull-right"><%=number_to_currency @business.total_interests%></span>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-6 col-md-offset-1 border-left">
+      <div class="row">
+        <div class="col-md-8">
+          <h4> Requirements </h4>
+          <p class="text-muted"> List of requirements for this business </p>
+        </div>
+        <div class="col-md-4">
+          <% if policy([:businesses, :business_requirement]).create? %>
+            <%= link_to new_bplo_section_business_business_requirement_path(@business), title: 'Add Additional Requirement' do %>
+              <span class="pull-right fa-2x" title="Add Additional Requirement" data-toggle="tooltip"><i class="fa fa-plus-circle"></i></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+<br>
+
+<% @business.business_requirements.each do |business_requirement| %>
+  <div class="row">
+    <div class="col-md-6 col-xs-6">
+      <%= business_requirement.name %><br>
+      <small class="text-muted"><%=business_requirement.department_name %></small>
+
+
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <% if @business.business_requirements.verified.include?(business_requirement) && current_user.bplo_officer? %>
+          <span classs="btn">
+            <%=link_to business_requirement_path(business_requirement), class: 'btn no-padding', method: :delete do %>
+              <i class="fa fa-toggle-on fa-2x text-green"></i></span>
+            <% end %>
+        <% else %>
+          <% if policy(@verification).create? %>
+            <%= simple_form_for @verification, url: :business_requirement_verifications do |f| %>
+              <%= f.input :business_requirement_id, input_html: { value: business_requirement.id }, as: :hidden %>
+              <%=button_tag  class: 'btn no-padding', title: 'Verify' do %>
+               <i class="fa fa-toggle-off fa-2x"></i>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <% if !business_requirement.verified? && current_user.can_issue?(business_requirement) %>
+          <%= link_to 'Issue', new_business_requirement_issuance_path(business_requirement), class: "btn btn-primary btn-flat btn-sm" %>
+      <% end %>
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <% if policy([:businesses, :business_requirement]).destroy? %>
+        <% if !business_requirement.default_requirement?%>
+          <%= link_to business_requirement_path(business_requirement), method: :delete, title: "Remove", data: {confirm: "Are you sure you want to remove this requirement?"} do %>
+            <span class="text-danger" title="Remove Requirement" data-toggle="tooltip"><i class="fa fa-trash"></i>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <br>
+<% end %>
+<hr>
+<h4> Registrations </h4>
+<small class="text-muted"> BIR / SEC / CDA / DTI registration details </small>
+<br>
+<br>
+
+<p class="text-muted"> BIR Registration </p>
+<% if @business.bir_registration.present? %>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+      Registration Number
+
+    </div>
+    <div class="col-md-4">
+      <%= @business.bir_registration.registration_number %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+      Date Issued
+    </div>
+    <div class="col-md-4">
+      <%= @business.bir_registration.date_issued.strftime("%B %e, %Y") %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+      Expiry Date
+    </div>
+    <div class="col-md-4">
+      <%= @business.bir_registration.expiry_date.strftime("%B %e, %Y") %>
+      <% if @business.bir_registration.expired? %>
+        <p class="badge bg-red"> Expired </p>
+      <% end %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-5">
+      <% if policy([:businesses, :bir_registration]).edit? %>
+        <%= link_to 'Update Info', edit_bir_registration_path(@business.bir_registration), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<% if @business.bir_registration.blank? && policy([:businesses, :bir_registration]).new?  %>
+  <%=link_to 'Add Info', new_business_bir_registration_path(@business), class: "btn btn-sm btn-primary" %>
+  <% end %>
+  <hr>
+  <!-- DTI Registration -->
+  <% if @business.ownership_type.single_proprietorship? %>
+    <p class="text-muted"> DTI Registration </p>
+    <% if @business.dti_registration.present? %>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Registration Number
+
+        </div>
+        <div class="col-md-4">
+          <%= @business.dti_registration.registration_number %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Date Issued
+        </div>
+        <div class="col-md-4">
+          <%= @business.dti_registration.date_issued.strftime("%B %e, %Y") %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          Expiry Date
+        </div>
+        <div class="col-md-4">
+          <%= @business.dti_registration.expiry_date.strftime("%B %e, %Y") %>
+          <% if @business.dti_registration.expired? %>
+            <p class="badge bg-red"> Expired </p>
+          <% end %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+          <% if policy([:businesses, :dti_registration]).edit? %>
+            <%= link_to 'Update Info', edit_dti_registration_path(@business.dti_registration), class: "btn btn-primary btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <% if @business.dti_registration.blank? && policy([:businesses, :dti_registration]).edit? %>
+        <%=link_to 'Add Info', new_business_dti_registration_path(@business), class: "btn btn-sm btn-primary" %>
+    <% end %>
+      <hr>
+  <% elsif @business.ownership_type.cooperative? %>
+  <p class="text-muted"> CDA Registration </p>
+  <% if @business.cda_registration.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Registration Number
+
+      </div>
+      <div class="col-md-4">
+        <%= @business.cda_registration.registration_number %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Date Issued
+      </div>
+      <div class="col-md-4">
+        <%= @business.cda_registration.date_issued.strftime("%B %e, %Y") %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Expiry Date
+      </div>
+      <div class="col-md-4">
+        <%= @business.cda_registration.expiry_date.strftime("%B %e, %Y") %>
+        <% if @business.cda_registration.expired? %>
+          <p class="badge bg-red"> Expired </p>
+        <% end %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        <% if policy([:businesses, :cda_registration]).edit? %>
+          <%= link_to 'Update Info', edit_cda_registration_path(@business.cda_registration), class: "btn btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <% if @business.cda_registration.blank? && policy([:businesses, :cda_registration]).new? %>
+    <%=link_to 'Add Info', new_business_cda_registration_path(@business), class: "btn btn-sm btn-primary" %>
+    <% end %>
+    <hr>
+  <% elsif @business.ownership_type.corporation? %>
+  <p class="text-muted"> SEC Registration </p>
+  <% if @business.sec_registration.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Registration Number
+
+      </div>
+      <div class="col-md-4">
+        <%= @business.sec_registration.registration_number %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Date Issued
+      </div>
+      <div class="col-md-4">
+        <%= @business.sec_registration.date_issued.strftime("%B %e, %Y") %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        Expiry Date
+      </div>
+      <div class="col-md-4">
+        <%= @business.sec_registration.expiry_date.strftime("%B %e, %Y") %>
+        <% if @business.sec_registration.expired? %>
+          <p class="badge bg-red"> Expired </p>
+        <% end %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-5">
+        <% if policy([:businesses, :sec_registration]).edit? %>
+          <%= link_to 'Update Info', edit_sec_registration_path(@business.sec_registration), class: "btn btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <% if @business.sec_registration.blank?  && policy([:businesses, :sec_registration]).new? %>
+    <%=link_to 'Add Info', new_business_sec_registration_path(@business), class: "btn btn-sm btn-primary" %>
+    <% end %>
+    <hr>
+  <% end %>
+
+    </div>
+
+  </div>
+</div>

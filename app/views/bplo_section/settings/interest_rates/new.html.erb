@@ -1,0 +1,5 @@
+<%= simple_form_for @interest_rate, url: :bplo_section_settings_interest_rates do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :rate, label: "Rate (in decimal)" %>
+  <%= f.submit "Save Rate", class: "btn btn-primary btn-flat" %>
+<% end %>

@@ -1,0 +1,29 @@
+<% if businesses.present? %>
+   <% businesses.each do |business| %>
+     <%=link_to treasury_department_business_path(business) do %>
+       <div class="row">
+         <div class="col-md-2 col-sm-2 col-xs-3">
+           <%=image_tag(business.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+         </div>
+         <div class="col-md-6 col-sm-4 col-xs-9">
+           <span class="text-blue"><b><%=business.name.try(:upcase) %></b></span><br>
+           <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=business.full_address %></small><br>
+           <small class="text-muted"><i class="fa fa-user"></i> &nbsp; <%=business.taxpayers_full_name.try(:upcase) %></small><br><br>
+
+
+         </div>
+         <div class="col-md-2 col-md-offset-1 hidden-xs">
+
+          <span class="text-muted"> <%= number_to_currency business.balance %></span><br>
+          <small class="text-muted"> BALANCE </small>
+
+         </div>
+
+       </div>
+       <hr>
+     <% end %>
+   <% end %>
+   <center><%= paginate businesses %> </center>
+ <% else %>
+   No businesses found.
+ <% end %>

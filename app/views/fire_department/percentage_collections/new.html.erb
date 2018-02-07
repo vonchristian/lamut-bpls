@@ -1,0 +1,86 @@
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@entry.commercial_document.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to fire_department_business_path(@entry.commercial_document) do %>
+          <%= @entry.commercial_document.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @entry.commercial_document.taxpayers_full_name %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+
+        <div class="row">
+          <div class="col-md-8 col-md-offset-1">
+            <small class="text-muted"> SUBTOTAL </small>
+          </div>
+          <div class="col-md-2">
+            <span class='pull-right'><%=number_to_currency @entry.credit_amounts.sum(:amount) %></span>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-1">
+            <small class="text-red"> LESS EXEMPTIONS </small>
+          </div>
+          <div class="col-md-2">
+            <span class='pull-right text-red'><%=number_to_currency @entry.credit_amounts.exempted_by_fire_dept.sum(&:amount) %></span>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-1">
+            <small class="text-muted"> TOTAL </small>
+          </div>
+          <div class="col-md-2">
+            <span class='pull-right'><%=number_to_currency @entry.credit_amounts.sum(:amount) - @entry.credit_amounts.exempted_by_fire_dept.sum(&:amount)  %></span>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-1">
+            <small class="text-muted"> FIRE SAFETY INSPECTION FEE (10%) </small>
+          </div>
+          <div class="col-md-2">
+            <span class='pull-right bg-gray'><b><%=number_to_currency (@entry.credit_amounts.sum(:amount) - @entry.credit_amounts.exempted_by_fire_dept.sum(&:amount)) * 0.10  %></b></span>
+          </div>
+        </div>
+        <br>
+        <p class="text-muted">PAYMENT DETAILS </p>
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+              <%= simple_form_for [@entry, @collection], url: :fire_department_payment_percentage_collections do |f| %>
+                <%= f.input :entry_date, label: "Date", as: :string, input_html: { class: "datepicker" } %>
+                <%= f.input :reference_number, label: "OR Number" %>
+                <%= f.simple_fields_for :fire_safety_inspection_fee do |fs| %>
+                <%= fs.input :amount, label: "Fire Inspection Fee", input_html: { value: (@entry.credit_amounts.sum(:amount) - @entry.credit_amounts.exempted_by_fire_dept.sum(&:amount)) * 0.10 } %>
+                <span class="help-block"> Please add 10% on Barangay Clearance </span>
+                <% end %>
+                <%= f.simple_fields_for :storage_fee do |ff| %>
+                  <%= ff.input :amount, label: "Storage Fee" %>
+                <% end %>
+                <%= f.simple_fields_for :conveyance_clearance_fee do |cf| %>
+                  <%= cf.input :amount, label: "Conveyance Clearance Fee" %>
+                <% end %>
+                <%= f.simple_fields_for :installation_clearance_fee do |ff| %>
+                  <%= ff.input :amount, label: "Installation Clearance Fee" %>
+                <% end %>
+                <%= f.simple_fields_for :fire_code_fine do |ff| %>
+                  <%= ff.input :amount, label: "Fire Code Administrative Fine" %>
+                <% end %>
+                <%= f.simple_fields_for :construction_tax do |ff| %>
+                  <%= ff.input :amount, label: "Construction Tax" %>
+                <% end %>
+                <div class="box-footer">
+                  <%= f.submit "Save Payment", class: "btn btn-primary pull-right" %>
+                </div>
+              <% end %>
+            </div>
+          </div>

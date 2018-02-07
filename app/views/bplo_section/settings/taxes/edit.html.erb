@@ -1,0 +1,10 @@
+<%= simple_form_for @tax, url: :bplo_section_settings_tax do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :minimum_gross_sale %>
+  <%= f.input :maximum_gross_sale %>
+  <%= f.input :tax_amount %>
+  <%= f.input :tax_rate %>
+  <%= f.input :tax_rate_for_excess %>
+  <%= f.input :minimum_tax_amount %>
+  <%= f.submit "Save" %>
+<% end %>

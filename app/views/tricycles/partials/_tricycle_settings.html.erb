@@ -1,0 +1,7 @@
+<div class="tab-pane" id="tricycle_settings">
+  <p>Destroy tricycle</p>
+  <span class="text-muted"> Destroying this trycycle deletes all previous transactions. Please be careful. </span>
+  <% if policy(@tricycle).destroy? %>
+    <%= link_to 'Delete Tricycle', tricycle_path(@tricycle), method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure you want to destroy this trycycle?"} %>
+  <% end %>
+</div>

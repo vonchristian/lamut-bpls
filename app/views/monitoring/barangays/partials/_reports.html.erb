@@ -1,0 +1,123 @@
+<div class="tab-pane" id="barangay-reports">
+  <h4>List of Registered Businesses </h4>
+  <%=link_to 'This Day', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_day, to_date: Time.zone.now.end_of_day), class: "badge bg-gray" %>
+  <%=link_to 'This Week', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_week, to_date: Time.zone.now.end_of_week), class: "badge bg-gray" %>
+    <%=link_to 'This Month', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_month, to_date: Time.zone.now.end_of_month), class: "badge bg-gray" %>
+    <%=link_to 'This Year', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_year, to_date: Time.zone.now.end_of_year), class: "badge bg-gray" %>
+    <%=link_to 'First Quarter', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_year.beginning_of_quarter, to_date: Time.zone.now.beginning_of_year.end_of_quarter), class: "badge bg-gray" %>
+    <%=link_to 'Second Quarter', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_year.next_quarter.beginning_of_quarter, to_date: Time.zone.now.beginning_of_year.next_quarter.end_of_quarter), class: "badge bg-gray" %>
+      <%=link_to 'Third Quarter', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_year.next_quarter.next_quarter.beginning_of_quarter, to_date: Time.zone.now.beginning_of_year.next_quarter.next_quarter.end_of_quarter), class: "badge bg-gray" %>
+      <%=link_to 'Fourth Quarter', registered_businesses_monitoring_barangays_path(barangay_id: @barangay.id, format: 'pdf', from_date: Time.zone.now.beginning_of_year.next_quarter.next_quarter.next_quarter.beginning_of_quarter, to_date: Time.zone.now.beginning_of_year.next_quarter.next_quarter.next_quarter.end_of_quarter), class: "badge bg-green" %>
+    <br>
+    <br>
+    <p class="text-muted"> Or choose dates: </p>
+    <%= form_tag({:action => "index", controller: "monitoring/registered_businesses", format: 'pdf', barangay_id: @barangay.id}, {:method => :get})  do %>
+    <div class="row">
+      <div class="col-md-3">
+      <div class="form-group">
+        <%= text_field_tag :from_date, @from_date, :class => 'datepicker form-control border-input', :placeholder => "From " %>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <%= text_field_tag :to_date, @to_date, :class => 'form-control border-input datepicker', :placeholder => "To " %>
+        <%= hidden_field_tag :barangay_id, @barangay.id, :class => 'form-control border-input', :placeholder => "Barangay", hidden: true %>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-success btn-sm"> Generate Report</button>
+    </div>
+  </div>
+<% end %>
+<hr>
+
+<%= link_to 'List of Registered Busineses', registered_business_reports_path(format: 'pdf', barangay: @barangay) %>
+<small class="help-block"> Generate Report for registered busineses located in this barangay. </small>
+<br>
+<%= link_to 'List of Unrenewed Busineses', unregistered_business_reports_path(format: 'pdf', barangay: @barangay) %>
+<small class="help-block"> Generate Report for unrenewed businesses located in this barangay. </small>
+<br>
+<%= link_to 'List of Retired Businesses', retired_business_reports_path(format: 'pdf', barangay: @barangay) %>
+<small class="help-block"> Generate Report for retired businesses located in this barangay. </small>
+<hr>
+<%= link_to 'List of Businesses Owned By Women', owned_by_women_business_reports_path(format: 'pdf', barangay: @barangay) %>
+<small class="help-block"> Generate Report for businesses owned by women located in this barangay. </small>
+<hr>
+<%= link_to 'List of All Businesses', business_reports_path(format: 'pdf', barangay: @barangay) %>
+<small class="help-block"> Generate Report for all businesses located in this barangay. </small>
+<br>
+<br>
+<h4> Collection of Fees and Taxes </h4>
+<p class="help-block"> From: <%= @from_date.strftime("%B %e, %Y") %> To: <%= @to_date.strftime("%B %e, %Y") %></p>
+<hr>
+<%= form_tag({:action => "show", controller: "monitoring/barangays"}, {:method => :get})  do %>
+<div class="row">
+  <div class="col-md-3">
+  <div class="form-group">
+    <%= text_field_tag :from_date, @from_date, :class => 'datepicker form-control border-input', :placeholder => "From " %>
+  </div>
+</div>
+<div class="col-md-3">
+  <div class="form-group">
+    <%= text_field_tag :to_date, @to_date, :class => 'form-control border-input datepicker', :placeholder => "To " %>
+    <%= hidden_field_tag :barangay_id, @barangay.id, :class => 'form-control border-input', :placeholder => "Barangay", hidden: true %>
+  </div>
+</div>
+<div class="col-md-2">
+  <button type="submit" class="btn btn-success btn-sm"> Generate</button>
+</div>
+</div>
+<% end %>
+<div class="row">
+  <div class="col-md-8">
+    Fees/Taxes
+  </div>
+  <div class="col-md-2">
+    Assessed
+  </div>
+  <div class="col-md-2">
+    Collected
+  </div>
+</div>
+<hr>
+<% Accounting::Account.accounts_receivables.each do |account| %>
+  <div class="row">
+    <div class="col-md-8">
+      <%= account.name.gsub('Accounts Receivable - ', '') %>
+    </div>
+    <div class="col-md-2">
+      <%=number_to_currency account.collection_for(barangay: @barangay, from_date: @from_date, to_date: @to_date) %>
+    </div>
+    <div class="col-md-2">
+      <%= account.assessed_for(barangay: @barangay, from_date: @from_date, to_date: @to_date) %>
+    </div>
+  </div>
+  <br>
+<% end %>
+<hr>
+
+  <div class="box box-solid">
+    <div class="box-header">
+      <h3 class="box-title"> Line of Businesses </h3>
+    </div>
+    <div class="box-body">
+      <% BploSection::Settings::LineOfBusiness.highest_rated.each do |line_of_business| %>
+        <div class="row">
+          <div class="col-md-8">
+            <%=line_of_business.name %>
+          </div>
+          <div class="col-md-2">
+            <%= line_of_business.businesses.in(@barangay).count %>
+          </div>
+          <div class="col-md-2">
+            <%=link_to bplo_section_line_of_business_path(line_of_business, barangay: @barangay, format: "pdf") do %>
+              <i class="fa fa-file-pdf-o"></i>
+            <% end %>
+          </div>
+        </div>
+        <br>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>

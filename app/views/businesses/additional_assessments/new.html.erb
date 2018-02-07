@@ -1,0 +1,75 @@
+<% breadcrumb :new_business_assessment, @business %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to business_path(@business) do %>
+          <%= @business.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @business.taxpayers_full_name %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-8">
+          <h4> Taxes and Fees </h4>
+        </div>
+      </div>
+      <br>
+      <small class="text-muted">&nbsp; &nbsp; FEES </small><p></p>
+
+      <% @business.fees.each do |fee| %>
+        <% if !fee.credit_account.entries.where(commercial_document: @business).present? %>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-7">
+              <%= fee.name %>
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right"><%=number_to_currency fee.amount %></span>
+            </div>
+          </div>
+          <br>
+        <% end %>
+      <% end %>
+      
+      <%= simple_form_for @assessment, url: :business_assessments do |f| %>
+        <%= f.error_notification %>
+        <!-- Business Fees -->
+        <% if @business.fees.present? %>
+          <%@business.fees.each do |fee| %>
+            <% if !fee.credit_account.entries.where(commercial_document: @business).present? %>
+              <%=f.simple_fields_for :debit_amounts do |d|  %>
+                <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount }, as: :hidden %>
+                <%=d.input :account_id, input_html: {value: fee.credit_account.id}, as: :hidden %>
+              <% end %>
+              <%=f.simple_fields_for :credit_amounts do |c|  %>
+                <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount },  as: :hidden %>
+                <%=c.input :account_id, input_html: { value: fee.debit_account.id },  as: :hidden %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+
+          <%= f.input :reference_number, as: :hidden %>
+          <%= f.input :entry_date, label: "Assessment Date", as: :string, input_html: { class: "datepicker", default: Date.today } %>
+          <%= f.input :description, input_html: { value: "Assessment of fees and taxes" }, as: :hidden %>
+          <div class="box-footer">
+            <%= f.submit "Save Assessment", class: "btn btn-primary btn-flat pull-right", data: { disable_with: "Saving Assessment..."} %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>

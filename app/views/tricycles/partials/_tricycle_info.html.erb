@@ -1,0 +1,73 @@
+<div class="tab-pane" id="tricycle-info">
+  Tricycle Owner Details
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+	      <div class="col-md-6">
+	        Taxpayer
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.taxpayer.try(:full_name) %>
+	      </div>
+	    </div>
+	    <br>
+	    <div class="row">
+	      <div class="col-md-6">
+	        Address
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.taxpayer.try(:full_address) %>
+	      </div>
+	    </div>
+	    <br>
+	    <div class="row">
+	      <div class="col-md-6">
+	        Contact Number
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.taxpayer.try(:contact_number) %>
+	      </div>
+	    </div>
+	  </div>
+  </div>
+  <hr>
+  Tricycle Details 
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+	      <div class="col-md-6">
+	        Plate Number
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.plate_number.try(:upcase) %>
+	      </div>
+	    </div>
+	    <br>
+	    <div class="row">
+	      <div class="col-md-6">
+	        MTOP Number
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.mtop_number.try(:upcase) %>
+	      </div>
+	    </div>
+	    <br>
+	    <div class="row">
+	      <div class="col-md-6">
+	        Tricycle Organization
+	      </div>
+	      <div class="col-md-6">
+	        <%=@tricycle.tricycle_organization.try(:name) %>(<%= @tricycle.tricycle_organization.try(:abbreviated_name) %>) 
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<br>
+	<br>
+	<% if policy(:tricycle).edit? %>
+	  <%= link_to "Update Info", edit_tricycle_path(@tricycle), class: "btn btn-primary" %>
+	<% end %>
+</div>

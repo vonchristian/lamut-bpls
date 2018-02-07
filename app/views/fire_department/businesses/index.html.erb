@@ -1,0 +1,83 @@
+<% breadcrumb :fire_department_businesses %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="box box-default">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <%=form_tag fire_department_businesses_path, method: :get, class: "search-form" do %>
+            <div class="input-group">
+              <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Enter Business Nane..", id: 'taxpayer-search-form' %>
+              <span class="input-group-btn">
+                <%= button_tag(type: 'submit', id: "search-btn", class: "btn btn-flat") do %>
+                  <i class="fa fa-search"></i>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+      <div class="box-body">
+       <% if @businesses.present? %>
+          <% @businesses.each do |business| %>
+            <%=link_to fire_department_business_path(business) do %>
+              <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-3">
+                  <%=image_tag(business.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+                </div>
+                <div class="col-md-6 col-sm-4 col-xs-9">
+                  <span class="text-blue"><b><%=business.name.try(:upcase) %></b></span><br>
+                  <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=business.full_address %></small><br>
+                  <small class="text-muted"><i class="fa fa-user"></i> &nbsp; <%=business.taxpayers_full_name.try(:upcase) %></small><br><br>
+                  <% if business.transient? %>
+                    <small class="badge bg-red">Transient</small><br>
+                  <% end %>
+
+
+                </div>
+              </div>
+              <hr>
+            <% end %>
+          <% end %>
+          <center><%= paginate @businesses %> </center>
+        <% else %>
+          No businesses found.
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="row">
+        <div class="col-md-12">
+          <h2><center><%= Business.count %></center></h2>
+          <center><small> TOTAL BUSINESSES </small>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="box box-default">
+      <div class="box-header">
+        <h3 class="box-title"> Businesses per Barangay </h3>
+      </div>
+      <div class="box-body">
+        <% Addresses::Barangay.in_lamut.each do |barangay| %>
+          <%=link_to fire_department_barangay_path(barangay) do %>
+            <div class="row">
+              <div class="col-md-8">
+                <%=barangay.name %>
+              </div>
+              <div class="col-md-4">
+                <span class="pull-right">
+                  <span class="badge bg-gray"><%= barangay.businesses.uniq.count %></span>
+                </span>
+              </div>
+            </div>
+          <% end %>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+</div>

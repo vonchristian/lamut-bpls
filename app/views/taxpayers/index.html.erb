@@ -1,0 +1,109 @@
+<% breadcrumb :taxpayers %>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="box box-default">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-md-2 hidden-xs">
+          <h3 class="box-title"> Taxpayers </h3>
+        </div>
+        <div class="col-md-7 col-xs-12">
+          <%=form_tag taxpayers_path, method: :get, class: "search-form" do %>
+            <div class="input-group">
+              <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search by last name, first name, middle name ...", id: 'taxpayer-search-form' %>
+              <span class="input-group-btn">
+                <%= button_tag(type: 'submit', id: "search-btn", class: "btn btn-flat") do %>
+                  <i class="fa fa-search"></i>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+        <div class="col-md-2 pull-right">
+          <%= link_to new_taxpayer_path, title: "New taxpayer" do %>
+            <span class="btn btn-primary pull-right" title="New taxpayer" data-toggle="tooltip"><i class="fa fa-user-plus"></i></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+      <div class="box-body">
+       <% if @taxpayers.present? %>
+          <% @taxpayers.each do |taxpayer | %>
+            <%=link_to taxpayer_path(taxpayer) do %>
+              <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-3">
+                  <%=image_tag(taxpayer.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-9">
+                  <span class="text-blue"><b><%=taxpayer.full_name.try(:upcase) %></b></span><br>
+                  <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=taxpayer.full_address %></small><br>
+                  <small class="text-muted"><i class="fa fa-phone"></i> &nbsp; <%=taxpayer.contact_number %></small>
+                  <p></p>
+
+                </div>
+                <div class="col-md-4 hidden-xs">
+
+                 <span class="text-muted"> <%#= taxpayer.program_name %></span>
+                </div>
+                <div class="col-md-2 col-xs-6">
+
+                </div>
+              </div>
+              <hr>
+            <% end %>
+          <% end %>
+          <center><%= paginate @taxpayers %> </center>
+        <% else %>
+          No taxpayers found.
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="row">
+        <div class="col-md-4 border-right">
+          <h2><center><%= Taxpayer.male.count %></center></h2>
+          <center><small> MALE </small>
+        </div>
+        <div class="col-md-4 border-right">
+          <h2><center><%= Taxpayer.female.count %></center></h2>
+          <center><small> FEMALE </small>
+        </div>
+        <div class="col-md-4 border-right">
+          <h2><center><%= Taxpayer.others.count %></center></h2>
+          <center><small> OTHER </small>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          <h2><center><%=render 'taxpayers/partials/count'%></center></h2>
+          <center><small> TOTAL TAXPAYERS </small>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="box box-default">
+      <div class="box-header">
+        <h3 class="box-title"> Taxpayers per Barangay </h3>
+      </div>
+      <div class="box-body">
+        <% Addresses::Barangay.all.each do |barangay| %>
+          <div class="row">
+            <div class="col-md-8">
+              <%=barangay.name %>
+            </div>
+            <div class="col-md-4">
+              <span class="pull-right">
+                <span class="badge bg-gray"><%= barangay.taxpayers.uniq.count %></span>
+              </span>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+</div>

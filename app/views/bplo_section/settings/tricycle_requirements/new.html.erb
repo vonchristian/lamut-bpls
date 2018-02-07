@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <div class="box box-danger">
+      <div class="box-header">
+        <h3 class="box-title"> Requirement Details </h3>
+      </div>
+      <div class="box-body">
+        <%= simple_form_for @requirement, url: :bplo_section_settings_tricycle_requirements do |f| %>
+          <%= f.input :name %>
+          <%= f.input :default_requirement, label: "Default Requirement" %>
+          <%= f.input :department_id, collection: BploSection::Settings::Department.all.map{|a| [a.name, a.id] }, input_html: { id: 'required_document_department'}, prompt: "Select Department" %>
+          <small class="help-block"> Select department who will issue this document. </small>
+          <div class="box-footer">
+            <%= f.submit "Create Required Document", class: "btn btn-primary btn-flat pull-right" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

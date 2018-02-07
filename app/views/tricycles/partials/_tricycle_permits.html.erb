@@ -1,0 +1,38 @@
+<div class="tab-pane" id='tricycle_permits'>
+Permits
+<% if !@tricycle.tricycle_permit_applications.for_current_year.present? && policy([:tricycles, :tricycle_permit_application]).new? %>
+  <%= link_to 'New Tricycle Permit Application', new_tricycle_tricycle_permit_application_path(@tricycle) %>
+<% end %>
+<hr>
+<% @tricycle.tricycle_permit_applications.each do |tricycle_permit_application| %>
+  <div class="row">
+    <div class="col-md-2">
+      <%= tricycle_permit_application.application_number %>
+    </div>
+    <div class="col-md-2">
+      <%= tricycle_permit_application.application_date.strftime("%B %e, %Y") %>
+    </div>
+    <div class="col-md-2">
+      <%= tricycle_permit_application.transaction_type.try(:titleize) %>
+    </div>
+    <div class="col-md-2">
+      <% if !tricycle_permit_application.approved? && policy([:tricycles, :tricycle_permit_application]).new?  && @tricycle.ready_for_approval?%>
+        <%= link_to new_tricycle_permit_application_permit_approval_path(tricycle_permit_application), title: "Approve Tricycle Permit Application" do %>
+          <span class="btn btn-success btn-flat"><i class="fa fa-thumbs-up"></i> Approve </span>
+        <% end %>
+      <% end %>
+      <% if tricycle_permit_application.approved? %>
+          <span class="label bg-green"> Approved </span>
+      <% end %>
+    </div>
+      <div class="col-md-2">
+        <% if tricycle_permit_application.approved? && policy([:tricycles, :tricycle_permit_application]).new? && !tricycle_permit_application.expired? %>
+        <%=link_to tricycle_permit_path(tricycle_permit_application.tricycle_permit_approval, format: 'pdf') do  %>
+          <span class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Issue </span>
+        <% end %>
+       <% end %>
+    </div>
+  </div>
+  <hr>
+<% end %>
+</div>

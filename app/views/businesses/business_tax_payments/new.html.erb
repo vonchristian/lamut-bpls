@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+    <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+          <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username">
+          <%=link_to business_path(@business) do %>
+            <%= @business.name.try(:upcase) %></h3>
+            <h5 class="widget-user-desc text-muted"><i class="fa fa-user"></i> <%= @business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+            <h5 class="widget-user-desc text-muted"> Mode of Payment: <span class="label bg-blue"><%=@business.mode_of_payment_name %></span> </h5>
+          <% end %>
+      </div>
+      <small class="text-muted">&nbsp; &nbsp; TAXES </small><p></p>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-7">
+          Business Tax
+        </div>
+        <div class="col-md-3">
+          <span class="pull-right"><%=number_to_currency @business.gross_sales.total_tax %></span>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-7">
+          Payments
+        </div>
+        <div class="col-md-3">
+          <span class="pull-right"><%=number_to_currency @business.business_tax_payments %></span>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-7">
+          <b>BALANCE</b>
+        </div>
+        <div class="col-md-3">
+          <span class="pull-right"><b><%=number_to_currency @business.balance %></b></span>
+        </div>
+      </div>
+      <hr>
+      <div class="box-body">
+      <%= simple_form_for @entry, url: :business_business_tax_payments do |f| %>
+        <%= f.error_notification %>
+          <!-- Business Tax -->
+          <% if !@business.gross_sales.total_tax.zero? && !@business.cooperative? && !@business.business_tax_exempted? %>
+            <%=f.simple_fields_for :debit_amounts do |d|  %>
+            <%# if @business.annually? %>
+              <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.balance, id: 'business-tax-form-debit-entry' }, label: "Business Tax"  %>
+              <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+            <% end %>
+            <%=f.simple_fields_for :credit_amounts do |c|  %>
+              <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.balance, id: 'business-tax-form-credit-entry' }, as: :hidden %>
+              <%=c.input :account_id, input_html: { value: Accounting::Account.find_by_name("Accounts Receivable - Business Tax").id }, as: :hidden  %>
+            <% end %>
+          <% end %>
+
+          <%= f.input :reference_number, label: "OR Number" %>
+          <%= f.input :entry_date, label: "Payment Date", as: :string, input_html: { class: "datepicker", default: Date.today } %>
+          <%= f.input :description, input_html: { value: "Payment of fees and taxes" }, as: :hidden %>
+        <%= f.submit "Save Payment", class: "btn btn-primary btn-block btn-flat pull-right", data: { disable_with: "Saving..."} %>
+      <% end %>
+    </div>
+  </div>
+</div>

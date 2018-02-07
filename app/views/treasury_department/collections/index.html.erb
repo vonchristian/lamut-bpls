@@ -1,0 +1,75 @@
+<% breadcrumb :treasury_department_collections %>
+<div class="row">
+  <div class="col-md-7">
+    <div class="box box-default">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <%=form_tag treasury_department_collections_path, method: :get, class: "search-form" do %>
+            <div class="input-group">
+              <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Enter OR Number...", id: 'taxpayer-search-form' %>
+              <span class="input-group-btn">
+                <%= button_tag(type: 'submit', id: "search-btn", class: "btn btn-flat") do %>
+                  <i class="fa fa-search"></i>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+      <div class="box-body">
+        <div class="table table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th> </th>
+                <th> Date </th>
+                <th> OR Number </th>
+                <th> Taxpayer </th>
+                <th> Amount </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @collections.order(created_at: :desc).each do |collection| %>
+                <tr>
+                  <td><%= image_tag(collection.recorder.avatar.url(:medium), class: "img-circle", height: 45, width: 45) %> </td>
+                  <td> <%=link_to collection.entry_date.strftime("%B %e, %Y"), treasury_department_collection_path(collection) %><br>
+                  </td>
+                  <td> <%= link_to collection.reference_number, treasury_department_collection_path(collection) %></td>
+                  <td> <%=collection.commercial_document.try(:taxpayers_full_name) %></td>
+                  <td> <span class="pull-right"> <%=number_to_currency collection.credit_amounts.sum(:amount) %> </span></td>
+                  <td>
+                    <%=link_to treasury_department_collection_path(collection, format: "pdf") do  %>
+                      <span class="btn btn-default bg-gray btn-xs" title="Print(PDF)" data-toggle="tooltip"><i class="fa fa-print"></i></span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+            <center><%= paginate @collections %> </center>
+        </div>
+    </div>
+  </div>
+</div>
+  <div class="col-md-5">
+    <div class="box box-solid">
+      <div class="box-header">
+        <h3 class="box-title"> Collections </h3>
+      </div>
+      <div class="box-body">
+        <% Accounting::Account.accounts_receivables.sort_by(&:debits_balance).reverse.each do |account| %>
+          <div class="row">
+            <div class="col-md-7 col-md-offset-1">
+              <%= account.name.gsub('Accounts Receivable - ', '') %>
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right">
+                <%= number_to_currency account.credits_balance(from_date: @from_date, to_date: @to_date) %>
+              </span>
+            </div>
+          </div>
+          <br>
+        <% end %>

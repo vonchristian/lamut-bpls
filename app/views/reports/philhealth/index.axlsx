@@ -1,0 +1,7 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "PhilHealth Report") do |sheet|
+sheet.add_row ["Business Name",  "Business Address", "Taxpayer",  "Business Type", "Contact #", "# of Employees", "Type"]
+  @businesses.each do |business|
+    sheet.add_row [e.name.try(:upcase),  e.full_address, e.taxpayers_full_name.try(:upcase), e.business_status, e.taxpayers_contact_number, e.employee_count.try(:number), e.ownership_type_name]
+  end
+end

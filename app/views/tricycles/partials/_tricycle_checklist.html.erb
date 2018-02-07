@@ -1,0 +1,173 @@
+<div class="tab-pane active" id='tricycle_checklist'>
+
+  <div class="row">
+    <div class="col-md-5">
+      <div class="row">
+        <div class="col-md-9">
+          <h4> Fees </h4>
+          <p class="text-muted"> List of applicable fees</p>
+        </div>
+        <div class="col-md-3">
+          <% if policy([:tricycles, :applicable_tricycle_fee]).create? && !@tricycle.assessed_for_current_year? %>
+            <%= link_to new_tricycle_applicable_tricycle_fee_path(@tricycle), title: 'Add Additional Fee' do %>
+              <span class="pull-right fa-2x" title="Add Additional Fee" data-toggle="tooltip"><i class="fa fa-plus-circle"></i></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <br>
+      <small class="text-muted">&nbsp; &nbsp; FEES </small><p></p>
+
+      <% @tricycle.applicable_tricycle_fees.each do |fee| %>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            <%= fee.name %>
+          </div>
+          <div class="col-md-2">
+            <span class="pull-right"><%=number_to_currency fee.amount %></span>
+          </div>
+          <div class="col-md-1">
+            <% if !fee.default_fee?  && policy([:tricycles, :applicable_tricycle_fee]).destroy? && !@tricycle.assessed_for_current_year? %>
+              <%= link_to applicable_tricycle_fee_path(fee), method: :delete, title: "Remove Fee", data: {confirm: "Are you sure you want to remove this fee?"} do %>
+                <span class="text-danger" title="Remove Fee" data-toggle="tooltip"><i class="fa fa-trash"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <br>
+      <% end %>
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-8">
+            Fare Adjustment Fee
+          </div>
+          <div class="col-md-2">
+            <%if @tricycle.fare_adjustment_fees.for_current_year.zero? && policy([:fees, :fare_adjustment_fee]).create? && !@tricycle.assessed_for_current_year? %>
+              <%=link_to new_tricycle_fare_adjustment_fee_path(@tricycle), title: 'Assess Fare Adjustment Fee' do %>
+                <span class="btn btn-primary btn-xs" title="Assess Fare Adjustment Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+              <% end %>
+              <% else %>
+                <span class="pull-right"><%=number_to_currency @tricycle.fare_adjustment_fees.for_current_year %></span>
+            <% end %>
+          </div>
+        </div>
+        <br>
+      <small class="text-danger">&nbsp; &nbsp; SURCHARGES </small><p></p>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          Surcharges <br>
+          <% if policy([:businesses, :surcharge]).create? && @tricycle.surcharges.for_current_year.present? && @tricycle.surcharges.for_current_year > 0 && !@tricycle.assessed_for_current_year?%>
+            <%=link_to tricycle_surcharges_path(@tricycle), title: 'Assess Surchages', method: :create do %>
+              <small><span class="btn btn-xs btn-danger" title="Assess Surcharges" data-toggle="tooltip">Re Assess </span></small>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-md-2">
+          <%if @tricycle.surcharges.for_current_year.zero? && policy([:businesses, :surcharge]).create?  && @tricycle.late_registration? && !@tricycle.assessed_for_current_year? %>
+            <%=link_to tricycle_surcharges_path(@tricycle), title: 'Assess Surchages', method: :create do %>
+              <span class="btn btn-danger btn-xs" title="Assess Surcharges" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+            <% end %>
+            <% else %>
+              <span class="pull-right"><%=number_to_currency @tricycle.surcharges.for_current_year %></span>
+          <% end %>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+        Interests <br>
+          <% if policy([:tricycles, :late_registration_interest]).create? && @tricycle.late_registration_interests.for_current_year.present? && @tricycle.late_registration_interests.for_current_year > 0 && !@tricycle.assessed_for_current_year? %>
+            <%=link_to tricycle_late_registration_interests_path(@tricycle), title: 'Assess Interests', method: :create do %>
+              <small><span class="btn btn-xs btn-danger" title="Assess Interests" data-toggle="tooltip">Re Assess </span></small>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-md-2">
+          <%if @tricycle.late_registration_interests.for_current_year.zero? && policy([:tricycles, :late_registration_interest]).create? && !@tricycle.assessed_for_current_year? %>
+            <%=link_to tricycle_late_registration_interests_path(@tricycle), title: 'Assess Interests', method: :create do %>
+              <span class="btn btn-danger btn-xs" title="Assess Interests" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+            <% end %>
+            <% else %>
+              <span class="pull-right"><%=number_to_currency @tricycle.late_registration_interests.for_current_year %></span>
+          <% end %>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          <h4><b>TOTAL</b></h4>
+        </div>
+        <div class="col-md-2">
+          <h4><span class="pull-right"><b><%=number_to_currency @tricycle.total_fees %></b></span></h4>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div class="col-md-6 col-md-offset-1 border-left">
+      <div class="row">
+        <div class="col-md-8">
+          <h4> Requirements </h4>
+          <p class="text-muted"> List of requirements for this tricycle </p>
+        </div>
+        <div class="col-md-4">
+          <% if policy([:tricycles, :tricycle_requirement]).create? %>
+            <%= link_to new_tricycle_tricycle_requirement_path(@tricycle), title: 'Add Additional Requirement' do %>
+              <span class="pull-right fa-2x" title="Add Additional Requirement" data-toggle="tooltip"><i class="fa fa-plus-circle"></i></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+<br>
+
+<% @tricycle.applicable_tricycle_requirements.each do |tricycle_requirement| %>
+  <div class="row">
+    <div class="col-md-6 col-xs-6">
+      <%= tricycle_requirement.name %><br>
+      <small class="text-muted"><%=tricycle_requirement.department_name %></small>
+
+
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <%# if @tricycle.tricycle_requirements.verified.include?(tricycle_requirement) %>
+          <!--<span classs="btn"><i class="fa fa-toggle-on fa-2x text-green"></i></span>
+        <%# else %>
+          <%# if policy(@verification).create? && tricycle_requirement.department_name.blank? %>
+            <%#= simple_form_for @verification, url: :tricycle_requirement_verifications do |f| %>
+              <%#= f.input :tricycle_requirement_id, input_html: { value: tricycle_requirement.id }, as: :hidden %>
+              <%#=button_tag type: 'submit', class: 'btn no-padding', title: 'Verify' do %>
+               <i class="fa fa-toggle-off fa-2x"></i>
+              <%# end %>
+            <%# end %>
+          <%# end %>
+        <%# end %>
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <%# if !tricycle_requirement.verified? && current_user.can_issue?(tricycle_requirement) %>
+          <%#= link_to 'Issue', new_tricycle_requirement_issuance_path(tricycle_requirement), class: "btn btn-primary btn-flat btn-sm" %>
+      <%# end %>
+    </div>
+    <div class="col-md-2 col-xs-2">
+      <%# if policy([:tricycles, :tricycle_requirement]).destroy? %>
+        <%# if !tricycle_requirement.default_requirement? %>
+          <%#= link_to tricycle_requirement_path(tricycle_requirement), method: :delete, title: "Remove", data: {confirm: "Are you sure you want to remove this requirement?"} do %>
+            <span class="text-danger" title="Remove Requirement" data-toggle="tooltip"><i class="fa fa-trash"></i>
+          <%# end %>
+        <%# end %>
+      <%# end %>
+    -->
+    </div>
+  </div>
+  <br>
+<% end %>
+</div>
+</div>
+</div>

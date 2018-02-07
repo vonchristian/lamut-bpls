@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="box box-solid">
+      <%= simple_form_for [@business_activity, @gross_sale], url: :bplo_section_business_activity_gross_sales do |f| %>
+        <%= f.input :amount %>
+        <%= f.input :calendar_year, as: :string, input_html: { value: Time.zone.now.last_year.end_of_year.strftime("%B %e, %Y") }%>
+        <%= f.submit "Save Gross Sale" %>
+      <% end %>

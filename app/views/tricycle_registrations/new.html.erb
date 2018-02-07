@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Tricycle Permit Application Details </h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          </div>
+          <div class="col-md-5">
+        <%= simple_form_for @permit_application, url: :tricycle_registrations do |f| %>
+          <%= f.error_notification %>
+          <p> Transaction Details </p>
+          <%= f.input :transaction_type, collection: Tricycles::TricyclePermitApplication.transaction_types.keys.to_a.map{ |a| [a.titleize, a] }, as: :radio_buttons %>
+          <%= f.input :application_date, as: :string, input_html: { class: "datepicker" } %>
+          <%= f.input :application_number %>
+          <h4> Taxpayer Details </h4>
+
+              <%= f.input :taxpayer_last_name, label: "Last Name" %>
+
+              <%= f.input :taxpayer_first_name, label: "First Name" %>
+
+              <%= f.input :taxpayer_middle_name, label: "Middle Name"%>
+              <%= f.input :taxpayer_contact_number, label: "Taxpayer Contact Number"%>
+
+
+          <%= f.input :taxpayer_sex, label: "Sex", collection: Taxpayer.sexes.keys.to_a.map{|a| [a.titleize, a] }, as: :radio_buttons %>
+          <p> Taxpayer Address </p>
+
+              <%= f.input :taxpayer_street, label: 'Street/Sitio' %>
+
+              <%= f.input :taxpayer_barangay, label: 'Barangay' %>
+
+              <%= f.input :taxpayer_municipality_or_city, label: 'Municipality', input_html: { value: "Lamut" } %>
+
+              <%= f.input :taxpayer_province, label: 'Province', input_html: { value: "Ifugao" } %>
+          <hr />
+          <p> Tricycle Details </p>
+
+            <%= f.input :mtop_number, label: "MTOP Number" %>
+            <%= f.input :plate_number %>
+            <%= f.input :tricycle_organization_id, label: "Tricycle Organization (TODA)", collection: TricycleOrganization.all.map{|a| [a.abbreviated_name.upcase, a.id]}, prompt: "Select TODA" %>
+              <div class="box-footer">
+            <%= f.submit "Save Application", class: "btn btn-primary btn-flat pull-right", data: { disable_with: "Saving..."} %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

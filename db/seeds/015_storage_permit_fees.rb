@@ -1,0 +1,6 @@
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 500, maximum_value: 2000, amount: 1_100)
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 2001, maximum_value: 5000, amount: 1_650)
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 5001, maximum_value: 20_000, amount: 2_200)
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 20_001, maximum_value: 50_000, amount: 2_750)
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 50_001, maximum_value: 100_000, amount: 3_300)
+Fees::StoragePermitFee.find_or_create_by(minimum_value: 100_000, maximum_value: 100_000_000, amount: 4_400)

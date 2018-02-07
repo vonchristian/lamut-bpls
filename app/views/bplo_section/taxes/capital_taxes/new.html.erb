@@ -1,0 +1,5 @@
+<%= simple_form_for @capital_tax, url: :bplo_section_taxes_capital_taxes do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :rate %>
+  <%= f.submit "Save Rate" %>
+<% end %>

@@ -1,0 +1,30 @@
+<div class="tab-pane active" id="businesses">
+<%=link_to "New Business", new_bplo_section_taxpayer_business_path(@taxpayer), class: "btn btn-primary btn-flat" %>
+<hr>
+<% @taxpayer.businesses.distinct.each do |business| %>
+<%=link_to business_path(business) do %>
+  <div class="row">
+    <div class="col-md-2 col-sm-2 col-xs-3">
+      <%=image_tag(business.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+    </div>
+    <div class="col-md-6 col-sm-4 col-xs-9">
+      <span class="text-blue"><b><%=business.name.try(:upcase) %></b></span><br>
+      <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=business.full_address %></small><br>
+      <small class="text-muted"><i class="fa fa-phone"></i> &nbsp; <%#=taxpayer.contact_number %></small><br><br>
+      <p><span class="label bg-<%=business.status_color %>"><%=business.business_status %></span></p>
+
+    </div>
+    <div class="col-md-2 col-md-offset-2 hidden-xs">
+      <% if business.assessed_for_current_year? %>
+     <br>
+     <br>
+     <span class="text-muted"> <%= number_to_currency business.balance %></span><br>
+     <small class="text-muted"> BALANCE </small>
+     <% end %>
+    </div>
+
+  </div>
+  <hr>
+<% end %>
+<% end %>
+</div>

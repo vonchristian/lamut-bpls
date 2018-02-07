@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@business_requirement.business.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to business_path(@business_requirement.business) do %>
+          <%= @business_requirement.business.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @business_requirement.business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+      <%= simple_form_for [@business_requirement, @issuance], url: :business_requirement_issuances do |f| %>
+        <%= f.input :reference_number %>
+        <%= f.input :issue_date, as: :string, input_html: { class: "datepicker" } %>
+        <div class="box-footer">
+          <%= f.submit "Save", class: "btn btn-primary pull-right", data: { disable_with: "Saving..."} %>
+        </div>
+      <% end %>
+    </div>

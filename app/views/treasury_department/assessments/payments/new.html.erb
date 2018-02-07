@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@assessment.commercial_document.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to treasury_department_business_path(@assessment.commercial_document) do %>
+          <%= @assessment.commercial_document.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><i class="fa fa-user"></i> <%= @assessment.commercial_document.taxpayers_full_name %></h5>
+          <h5 class="widget-user-desc text-muted"> Mode of Payment: <span class="label bg-blue"><%=@assessment.commercial_document.mode_of_payment_name %></span> </h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+
+      <% @assessment.credit_amounts.order(amount: :desc).each do |amount| %>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          <%= amount.account.name.gsub("Accounts Receivable - ", "").singularize %>
+        </div>
+        <div class="col-md-2">
+          <span class="pull-right"><%= number_to_currency amount.amount %></span>
+        </div>
+      </div>
+      <br>
+      <% end %>
+      <hr>
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+          <h4> <b>TOTAL</b> </h4>
+        </div>
+        <div class="col-md-2">
+          <h4><span class="pull-right"><b><%=number_to_currency @assessment.credit_amounts.sum(&:amount) %></b></span></h4>
+        </div>
+      </div>
+      <br>
+      <%=simple_form_for @entry, url: :treasury_department_assessment_payments do |f| %>
+        <%= f.error_notification %>
+        <%= f.input :reference_number, label: "OR Number", autofocus: true, input_html: { class: "input-lg" }%>
+        <%= f.input :entry_date, label: "Payment Date", as: :string, input_html: { value: Time.zone.now.strftime("%B %e, %Y"), class: "datepicker" } %>
+        <% @assessment.credit_amounts.each do |amount| %>
+          <%=f.simple_fields_for :debit_amounts do |d|  %>
+            <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: amount.amount }, as: :hidden %>
+            <%=d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+          <% end %>
+          <%=f.simple_fields_for :credit_amounts do |c|  %>
+            <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: amount.amount }, as: :hidden %>
+            <%=c.input :account_id, input_html: { value: Accounting::Account.find_by(name: "Accounts Receivable - #{amount.account.name.gsub("Accounts Receivable - ", "")}").id }, as: :hidden %>
+          <% end %>
+        <% end %>
+        <div class="box-footer">
+          <%= f.submit "Save Payment", class: "btn btn-primary pull-right" %>
+      <% end %>

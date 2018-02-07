@@ -1,0 +1,27 @@
+<% breadcrumb :fire_department_business, @business %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-widget widget-user-2">
+      <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+        <%=image_tag(@business.avatar.url(:large), class: "img-square") %>
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username"><%= @business.name.upcase %></h3>
+        <% @business.taxpayers.distinct.each do |taxpayer| %>
+          <h5 class="widget-user-desc">&nbsp; &nbsp; &nbsp; &nbsp; <%=image_tag(taxpayer.avatar.url(:small), height: 35, width: 35, class: "img-circle") %> &nbsp; &nbsp; <%=taxpayer.full_name.try(:upcase) %></h5>
+        <% end %>
+      </div>
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#payments" data-toggle="tab">Taxes and Fees </a></li>
+        <li><a href="#info" data-toggle="tab">Business Info</a></li>
+      </ul>
+      <div class="tab-content">
+        <%=render 'fire_department/businesses/partials/business_info' %>
+        <%=render 'fire_department/businesses/partials/payments' %>
+      </div>
+    </div>
+  </div>
+</div>

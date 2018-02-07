@@ -1,0 +1,5 @@
+Fees::SanitaryInspectionFee.find_or_create_by(minimum_area: 1, maximum_area: 49.99, amount: 55)
+Fees::SanitaryInspectionFee.find_or_create_by(minimum_area: 50, maximum_area: 199.99, amount: 66)
+Fees::SanitaryInspectionFee.find_or_create_by(minimum_area: 200, maximum_area: 499.99, amount: 77)
+Fees::SanitaryInspectionFee.find_or_create_by(minimum_area: 500, maximum_area: 999.99, amount: 88)
+Fees::SanitaryInspectionFee.find_or_create_by(minimum_area: 1000, maximum_area: 99_999.99, amount: 110)

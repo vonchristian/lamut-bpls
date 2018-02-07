@@ -1,0 +1,8 @@
+<%= simple_form_for @storage_permit_fee, url: :fees_settings_storage_permit_fees do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :name %>
+  <%= f.input :minimum_value %>
+  <%= f.input :maximum_value %>
+  <%= f.input :amount %>
+  <%= f.submit "Create Storage Permit Fee" %>
+<% end %>

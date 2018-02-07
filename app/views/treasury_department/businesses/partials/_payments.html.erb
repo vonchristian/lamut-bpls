@@ -1,0 +1,84 @@
+<div class="tab-pane active" id='payments'>
+  <div class="row">
+    <div class="col-md-4 border-right">
+      <% if @business.assessed_for_current_year? %>
+        <h4><center><%=number_to_currency @business.assessments.total %></center></h4>
+      <% else %>
+        <h4 class="text-warning"><center> Not Yet Assessed </center></h4>
+      <% end %>
+      <small class="text-muted"><center> ASSESSED </center></small>
+    </div>
+    <div class="col-md-4 border-right">
+      <h4><center><%=number_to_currency @business.payments.total %></center></h4>
+      <small class="text-muted"><center> PAYMENTS </center></small>
+    </div>
+    <div class="col-md-4 border-right">
+      <h4 class="text-red"><center><%=number_to_currency @business.balance %></center></h4>
+      <small class="text-red"><center> BALANCE </center></small>
+    </div>
+  </div>
+  <hr>
+  <h4> Assessments History </h4>
+  <hr>
+  <div class="table table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th> Date </th>
+          <th> Amount </th>
+          <th> Employee </th>
+          <th> Actions </th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @business.assessments.order(created_at: :desc).each do |assessment| %>
+          <tr>
+            <td> <%= assessment.entry_date.strftime("%B %e, %Y") %></td>
+            <td> <%=number_to_currency assessment.credit_amounts.sum(:amount) %></td>
+            <td> <%= assessment.recorder.try(:full_name) %></td>
+            <td>
+              <%=link_to treasury_department_collection_path(assessment, format: "pdf") do  %>
+                <span class="btn btn-default bg-gray btn-xs"><i class="fa fa-print"></i></span>
+              <% end %>
+            </td>
+            <td>
+              <% if !assessment.paid? %>
+                <%= link_to "New Payment", new_treasury_department_assessment_payment_path(assessment), class: "btn btn-flat btn-primary" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Payments History </h4>
+  <hr>
+  <div class="table table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th> Date </th>
+          <th> Amount </th>
+          <th> Employee </th>
+          <th> Actions </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @business.payments.order(created_at: :desc).each do |assessment| %>
+          <tr>
+            <td> <%= assessment.entry_date.strftime("%B %e, %Y") %></td>
+            <td> <%=number_to_currency assessment.credit_amounts.sum(:amount) %></td>
+            <td> <%= assessment.recorder.try(:full_name) %></td>
+            <td>
+              <%=link_to treasury_department_collection_path(assessment, format: "pdf") do  %>
+                <span class="btn btn-default bg-gray btn-xs"><i class="fa fa-print"></i></span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

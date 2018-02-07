@@ -1,0 +1,102 @@
+<% breadcrumb :edit_business, @business %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-solid">
+      <div class="box-header">
+        <h3 class="box-title"> New Business Details </h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-5">
+          </div>
+          <div class="col-md-6">
+            <%= simple_form_for @business, url: :bplo_section_business do |f| %>
+              <%= f.error_notification %>
+              <center>
+                <%=image_tag(@business.avatar.url(:thumb), class: "img-square img-responsive") %>
+              <br>
+                <%= f.input :avatar, as: :file, label: "Upload Logo" %>
+              </center>
+                <%= f.input :name, label: "Business Name" %>
+                <%= f.input :ownership_type_id, collection: BploSection::Settings::OwnershipType.all.map{|a| [a.name.titleize, a.id] }, as: :radio_buttons %>
+                <%= f.input :mode_of_payment_id, collection: BploSection::Settings::ModeOfPayment.all.map{|a| [a.mode.titleize, a.id] }, as: :radio_buttons %>
+
+
+               <%= f.simple_fields_for :tin do |t| %>
+                <%= t.input :number, label: "TIN" %>
+              <% end %>
+              <p class="text-muted"> Employee Details </p>
+              <%= f.simple_fields_for :employee_count do |a| %>
+                  <%= a.input :number, label: 'No. of Employees' %>
+                <% end %>
+              <p class="text-muted"> Business Area Details </p>
+              <%= f.simple_fields_for :business_area do |a| %>
+                  <%= a.input :area, label: 'Business Area (in sq.m.)' %>
+                  <%= a.input :rented %>
+                <% end %>
+              <div id="rent_details" style="display:none;">
+                <%= f.simple_fields_for :rent do |r| %>
+                  <%= r.input :monthly_rent, as: :string %>
+                <% end %>
+                <%= f.simple_fields_for :lessor do |l| %>
+                  <%=l.input :full_name, label: "Lessor's Full Name" %>
+                  <%= l.input :address, label: "Lessor's Address" %>
+                  <%= l.input :contact_number, label: "Lessor's Contact Number" %>
+                  <%= l.input :email %>
+                <% end %>
+              </div>
+                <hr />
+                <%= f.input :gross_sales_tax_business_category_id, collection: BploSection::Settings::GrossSalesTaxBusinessCategory.all.map{|a| [a.name, a.id] }, as: :radio_buttons %>
+                <!-- <%#= f.input :deals_only_with_essential_commodities %>
+                <span class="help-block"> Check this box if business is exporter, and on manufacturer, miller, producer, wholesaler, distributor, dealer or retailer of essential commodities.1.Rice and Corn;
+            2.Wheat or cassava flour, meat, dairy products locally manufactured, processed or preserved food, sugar and agricultural marine, and fresh water products, whether in their original state or not;
+            3.Cooking oil and cooking gas;
+            4.Laundry soap, detergents, and medicine;
+            5.Agricultural implements, equipment and post-harvest facilities, fertilizers, pesticides, insecticides, herbicides, and other farm inputs;
+            6.Poultry feeds and other animal feeds;
+            7.School supplies; and
+            8.Cement </span> -->
+
+            <%= f.input :gross_sales_tax_config_id, input_html: { value: BploSection::Configurations::GrossSalesTaxConfig.order(created_at: :asc).first.id}, as: :hidden  %>
+            <hr>
+            <p class="text-muted"> Exemptions </p>
+            <%= f.input :business_tax_exempted, as: :boolean %>
+            <hr>
+            <p class="text-muted"> For Public Market Vendors </p>
+
+            <%= f.input :public_market_vendor, input_html: { id: 'business_public_market_vendor' } %>
+            <div id="vendor_details" style="display:none;">
+              <%= f.input :public_market_tenant_id, collection: PublicMarketTenant.all.map{|a| [a.vendor_type.titleize, a.id] }, as: :radio_buttons, label: "Vendor Type:" %>
+            </div>
+            <div class="box-footer">
+              <%= f.submit 'Save Business', class: "btn btn-primary pull-right" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var checkbox = document.getElementById('business_business_area_attributes_rented');
+  var details_div = document.getElementById('rent_details');
+  checkbox.onchange = function() {
+     if(this.checked) {
+       details_div.style['display'] = 'block';
+     } else {
+       details_div.style['display'] = 'none';
+     }
+  };
+</script>
+
+<script>
+  var vendor_checkbox = document.getElementById('business_public_market_vendor');
+  var vendor_details_div = document.getElementById('vendor_details');
+  vendor_checkbox.onchange = function() {
+     if(this.checked) {
+       vendor_details_div.style['display'] = 'block';
+     } else {
+       vendor_details_div.style['display'] = 'none';
+     }
+  };
+</script>

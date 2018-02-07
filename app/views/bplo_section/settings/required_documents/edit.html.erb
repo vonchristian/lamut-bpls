@@ -1,0 +1,6 @@
+<%= simple_form_for @required_document, url: :bplo_section_settings_required_document do |f| %>
+  <%= f.input :name %>
+  <%= f.input :default_requirement, label: "Default Requirement" %>
+  <%= f.input :department_id, collection: BploSection::Settings::Department.all.map{|a| [a.name, a.id] }, input_html: { id: 'required_document_department'} %>
+  <%= f.submit "Update Required Document" %>
+<% end %>

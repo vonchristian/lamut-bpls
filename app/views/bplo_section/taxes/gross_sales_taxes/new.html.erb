@@ -1,0 +1,7 @@
+<%= simple_form_for [@business_category, @gross_sales_tax], url: :bplo_section_gross_sales_tax_business_category_gross_sales_taxes do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :minimum_gross_sale, label: "Minimum Gross Sale" %>
+  <%= f.input :maximum_gross_sale, label: "Maximum Gross Sale" %>
+  <%= f.input :tax_amount, label: "Tax Amount" %>
+  <%= f.submit "Save Gross Sale Tax" %>
+<% end %>

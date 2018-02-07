@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to business_path(@business) do %>
+          <%= @business.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @business.taxpayers_full_name %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+      <h4 class="text-danger"> Revocation Details </h4>
+      <hr>
+      <%= simple_form_for @revocation, url: :business_revocations do |f| %>
+        <%= f.input :date, label: "Date Revoked", as: :string, input_html: { class: "datepicker" } %>
+        <%= f.input :remarks, as: :text, input_html: { rows: 12 } %>
+        <%= f.input :business_id, input_html: { value: @business.id }, as: :hidden %>
+        <div class="box-footer">
+          <%= f.submit "Revoke", class: "btn btn-danger btn-block" %>
+        </div>
+      <% end %>

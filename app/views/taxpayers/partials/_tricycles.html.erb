@@ -1,0 +1,27 @@
+<div class="tab-pane" id="tricycles">
+<%=link_to "New Tricycle", new_bplo_section_taxpayer_tricycle_path(@taxpayer), class: "btn btn-primary btn-flat" %>
+<hr>
+<% @taxpayer.tricycles.distinct.each do |tricycle| %>
+<%=link_to tricycle_path(tricycle) do %>
+  <div class="row">
+    <div class="col-md-2 col-sm-2 col-xs-3">
+      <%#=image_tag(business.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+    </div>
+    <div class="col-md-6 col-sm-4 col-xs-9">
+      <span class="text-blue"><b><%=tricycle.name.try(:upcase) %></b></span><br>
+      <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=tricycle.full_address %></small><br>
+    </div>
+    <div class="col-md-2 col-md-offset-2 hidden-xs">
+      <% if tricycle.assessed_for_current_year? %>
+     <br>
+     <br>ro
+     <span class="text-muted"> <%= number_to_currency tricycle.balance %></span><br>
+     <small class="text-muted"> BALANCE </small>
+     <% end %>
+    </div>
+
+  </div>
+  <hr>
+<% end %>
+<% end %>
+</div>

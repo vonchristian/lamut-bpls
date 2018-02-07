@@ -1,0 +1,67 @@
+<div class="tab-pane" id='tricycle_payments'>
+  <div class="row">
+    <div class="col-md-4 border-right">
+      <% if @tricycle.assessed_for_current_year? %>
+        <h4><center><%=number_to_currency @tricycle.assessments.total %></center></h4>
+      <% else %>
+        <h4 class="text-warning"><center> Not Yet Assessed </center></h4>
+      <% end %>
+      <small class="text-muted"><center> ASSESSED </center></small>
+    </div>
+    <div class="col-md-4 border-right">
+      <h4><center><%=number_to_currency @tricycle.payments.total %></center></h4>
+      <small class="text-muted"><center> PAYMENTS </center></small>
+    </div>
+    <div class="col-md-4 border-right">
+      <h4 class="text-red"><center><%=number_to_currency @tricycle.balance %></center></h4>
+      <small class="text-red"><center> BALANCE </center></small>
+    </div>
+  </div>
+  <hr>
+  <% if policy(:payment).create? && @tricycle.balance > 0 %>
+    <%= link_to 'New Payment', new_tricycle_payment_path(@tricycle), class: "btn btn-primary" %>
+  <% end %>
+  <% if policy(:assessment).create? %>
+    <%= link_to 'Assess', new_tricycle_assessment_path(@tricycle), class: "btn btn-primary" %>
+  <% end %>
+
+  <hr>
+  <h4> Assessments History </h4>
+  <hr>
+  <% @tricycle.assessments.each do |assessment| %>
+    <div class="row">
+      <div class="col-md-3">
+        <%= assessment.entry_date.strftime("%B %e, %Y") %>
+      </div>
+      <div class="col-md-3">
+        <%=number_to_currency assessment.credit_amounts.sum(:amount) %>
+      </div>
+      <div class="col-md-3">
+        <%= assessment.recorder.try(:full_name) %>
+      </div>
+      <div class="col-md-3">
+        <%=link_to "Print", collection_path(assessment, format: "pdf") %>
+      </div>
+    </div>
+    <br/>
+  <% end %>
+  <h4>Payments History </h4>
+  <hr>
+  <% @tricycle.payments.each do |payment| %>
+  <div class="row">
+    <div class="col-md-3">
+      <%= payment.entry_date.strftime("%B %e, %Y") %>
+    </div>
+    <div class="col-md-3">
+      <%=number_to_currency payment.credit_amounts.sum(:amount) %>
+    </div>
+    <div class="col-md-3">
+      <%= payment.recorder.try(:full_name) %>
+    </div>
+    <div class="col-md-3">
+      <%=link_to "Print", collection_path(payment, format: "pdf") %>
+    </div>
+  </div>
+  <br/>
+<% end %>
+</div>

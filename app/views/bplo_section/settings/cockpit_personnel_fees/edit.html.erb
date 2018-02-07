@@ -1,0 +1,6 @@
+<%= simple_form_for @fee, url: :bplo_section_settings_cockpit_personnel_fee do |f| %>
+  <%= f.error_notification %>
+  <%=f.input :name %>
+  <%= f.input :amount %>
+  <%= f.submit 'Update Fee' %>
+<% end %>

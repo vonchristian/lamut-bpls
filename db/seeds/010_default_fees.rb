@@ -1,0 +1,6 @@
+Fee.find_or_create_by(name: "Police Clearance Fee", amount: 55.00, debit_account: Accounting::Revenue.find_or_create_by(name: "Police Clearance Fees"), credit_account: Accounting::Asset.find_or_create_by(name: 'Accounts Receivable - Police Clearance Fees'))
+Fee.find_or_create_by(name: "Business Plate", amount: 55.00, debit_account: Accounting::Revenue.find_or_create_by(name: "Business TIN Plate Fees"), credit_account: Accounting::Asset.find_or_create_by(name: 'Accounts Receivable - Business TIN Plate Fees'))
+
+Fee.find_or_create_by(name: "Garbage Fee (Commercial Establishments)", amount: 420.00, debit_account: Accounting::Revenue.find_or_create_by(code: 402020190, name: "Garbage Fees"), credit_account: Accounting::Asset.find_or_create_by(code: 1030101012, name: 'Accounts Receivable - Garbage Fees'))
+Fee.find_or_create_by(name: "Garbage Fee (Residential Establishments)", amount: 300.00, debit_account: Accounting::Revenue.find_or_create_by(code: 402020190, name: "Garbage Fees"), credit_account: Accounting::Asset.find_or_create_by(code: 1030101012, name: 'Accounts Receivable - Garbage Fees'))
+Fee.find_or_create_by(name: "Engineering Clearance", amount: 55.00, debit_account: Accounting::Revenue.find_by(name: "Engineering Clearance"), credit_account: Accounting::Asset.find_or_create_by(name: 'Accounts Receivable - Engineering Clearance'))

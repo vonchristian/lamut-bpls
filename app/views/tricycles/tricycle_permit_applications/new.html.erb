@@ -1,0 +1,9 @@
+<%= simple_form_for [@tricycle, @application], url: :tricycle_tricycle_permit_applications do |f| %>
+  <%= f.error_notification %>
+  <% if @tricycle.tricycle_permit_applications.blank? %>
+    <%= f.input :transaction_type, collection: Tricycles::TricyclePermitApplication.transaction_types.keys.to_a.map{ |a| [ a.titleize, a] }, as: :radio_buttons %>
+  <% end %>
+  <%= f.input :application_date, as: :string, input_html: { class: "datepicker" } %>
+  <%= f.input :application_number %>
+  <%= f.submit "Save Application", class: "btn btn-primary btn-flat" %>
+<% end %>

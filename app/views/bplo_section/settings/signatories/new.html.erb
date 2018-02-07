@@ -1,0 +1,8 @@
+<%= simple_form_for @signatory, url: :bplo_section_settings_signatories do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :first_name %>
+  <%= f.input :middle_name %>
+  <%= f.input :last_name %>
+  <%= f.input :designation %>
+  <%= f.submit "Create Signatory", class: "btn btn-primary btn-flat" %>
+<% end %>

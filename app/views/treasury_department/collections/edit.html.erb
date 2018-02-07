@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@collection.recorder.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username"><%= @collection.recorder.try(:full_name).try(:upcase) %></h3>
+      <br>
+      <hr>
+        <%=simple_form_for @collection, url: :treasury_department_collection do |f| %>
+        <%= f.error_notification %>
+          <%= f.input :reference_number, label: "OR Number" %>
+          <%= f.submit "Update", class: "btn btn-primary btn-flat", data: {disable_with: "Updating..."} %>
+        <% end %>
+        <hr>
+          <h5 class="widget-user-desc text-muted"><i class="fa fa-bookmark"></i> OR Number <%= @collection.reference_number %></h5>
+          <h5 class="widget-user-desc text-muted"><i class="fa fa-calendar"></i> Date <%= @collection.entry_date.strftime("%B %e, %Y") %></h5>
+
+    </div>
+    <div class="box-body">
+<% @collection.credit_amounts.order(amount: :asc).each do |amount| %>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      <%= amount.account.name.gsub("Accounts Receivable - ", "").singularize %>
+    </div>
+    <div class="col-md-2">
+      <span class="pull-right"> <%= number_to_currency amount.amount %></span>
+    </div>
+  </div>
+  <br>
+<% end %>
+<hr>
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-8">
+    <b>TOTAL</b>
+  </div>
+  <div class="col-md-2">
+    <span class="pull-right"><b><%= number_to_currency @collection.credit_amounts.sum(:amount) %></b></span>
+  </div>
+</div>
+<br>

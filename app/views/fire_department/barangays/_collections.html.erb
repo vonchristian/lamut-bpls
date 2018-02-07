@@ -1,0 +1,40 @@
+<div class="tab-pane" id="barangay-collections">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6">
+          ACCOUNT
+        </div>
+        <div class="col-md-3">
+          ASSESSED
+        </div>
+        <div class="col-md-3">
+          COLLECTED
+        </div>
+      </div><hr>
+    </div>
+  </div>
+  <% Accounting::Account.accounts_receivables.each do |account| %>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6">
+            <%= account.name.gsub('Accounts Receivable - ', '') %>
+          </div>
+          <div class="col-md-3">
+            <span class="pull-right">
+              <%= number_to_currency account.assessed_for(barangay: @barangay, from_date: @from_date, to_date: @to_date) %>
+            </span>
+          </div>
+          <div class="col-md-3">
+              <span class="pull-right">
+                <%=number_to_currency account.collection_for(barangay: @barangay, from_date: @from_date, to_date: @to_date) %>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <hr>
+</div>

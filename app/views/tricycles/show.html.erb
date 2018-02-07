@@ -1,0 +1,35 @@
+<% breadcrumb :tricycle, @tricycle %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-widget widget-user-2">
+      <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username"> <%= @tricycle.name %></h3>
+          <h5 class="widget-user-desc">&nbsp; &nbsp; &nbsp; &nbsp; <%=image_tag(@tricycle.taxpayer.avatar.url(:small), height: 35, width: 35, class: "img-circle") %> &nbsp; &nbsp; <%=@tricycle.taxpayer_full_name %></h5
+
+      </div>
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tricycle_checklist" data-toggle="tab">Checklist</a></li>
+        <li><a href="#tricycle-info" data-toggle="tab">Tricycle Info</a></li>
+        <li><a href="#tricycle_payments" data-toggle="tab">Assessments & Payments </a></li>
+        <% if current_user.bplo_officer? %>
+          <li><a href="#tricycle_permits" data-toggle="tab">Tricycle Permits</a></li>
+        <% end %>
+        <% if current_user.bplo_officer? || current_user.system_administrator? %>
+          <li><a href="#tricycle_settings" data-toggle="tab">Settings</a></li>
+        <% end %>
+      </ul>
+      <div class="tab-content">
+        <%=render 'tricycles/partials/tricycle_checklist' %>
+        <%=render 'tricycles/partials/tricycle_info' %>
+        <%=render 'tricycles/partials/tricycle_permits' %>
+        <%=render 'tricycles/partials/tricycle_payments' %>
+        <%=render 'tricycles/partials/tricycle_settings' %>
+      </div>
+    </div>
+  </div>
+</div>

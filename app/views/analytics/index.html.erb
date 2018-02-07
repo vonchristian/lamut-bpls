@@ -1,0 +1,122 @@
+
+
+ <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-female"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">OWNED BY WOMEN</span>
+              <span class="info-box-number"><%= Business.owned_by_women.count %><small></small></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-google-plus"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">NEW BUSINESSES</span>
+              <span class="info-box-number"><%= Business.new_business.count %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-google-plus"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">RENEWED BUSINESSES</span>
+              <span class="info-box-number"><%= Business.renewed.count %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+         <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">CLOSED BUSINESSES</span>
+              <span class="info-box-number"><%= Business.closed.count %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">UNRENEWED</span>
+              <span class="info-box-number"><%= Business.unrenewed.count %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">TOTAL EMPLOYEES</span>
+              <span class="info-box-number"><%= Businesses::EmployeeCount.sum(&:number) %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+         <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">TOTAL CAPITAL</span>
+              <span class="info-box-number"><%= number_to_currency Businesses::BusinessCapital.sum(&:amount) %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+         <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-times"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">GROSS SALES</span>
+              <span class="info-box-number"><%= number_to_currency Businesses::GrossSale.sum(&:amount) %></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="box box-solid">
+              <div class="box-header">
+                <h3 class="box-title"> CMCI Classifications </h3>
+              </div>
+              <div class="box-body">
+                <% @competetive_index_categories.each do |category| %>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <%=link_to category.name, competetive_index_category_path(category) %>
+                    </div>
+                    <div class="col-md-4">
+                      <%= category.businesses.count %>
+                    </div>
+                  </div>
+                  <hr>
+                <% end %>
+              </div>

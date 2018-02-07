@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+    <div class="box-header">
+      <h3 class="box-title"> Taxpayer Information </h3>
+    </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          </div>
+          <div class="col-md-5">
+            <%= simple_form_for @taxpayer do |f| %>
+              <%= f.error_notification %>
+              <center>
+                <%=image_tag(@taxpayer.avatar.url(:thumb), class: "img-square img-responsive") %>
+              <br>
+                <%= f.input :avatar, as: :file, label: "Upload Photo" %>
+              </center>
+              <p class="text-muted">Personal Info </p>
+              <hr>
+              <%= f.input :first_name, label: "First Name" %>
+              <%= f.input :middle_name, label: "Middle Name" %>
+              <%= f.input :last_name, label: "Last Name" %>
+              <%= f.input :sex, collection: Taxpayer.sexes.keys.to_a.map{|a| [a.titleize, a] }, as: :radio_buttons %>
+              <br>
+              <p class="text-muted"> Contact Info </p>
+              <hr>
+              <%= f.input :contact_number, label: "Contact Number" %>
+              <%= f.input :email %>
+              <br>
+              
+              <%= f.simple_fields_for :tin do |t| %>
+                <%= t.input :number, label: "TIN Number" %>
+              <% end %>
+              <%= f.simple_fields_for :addresses do |aa| %>
+                <%= aa.input :street, label: 'Street/Sitio' %>
+                <%= aa.input :barangay_id, collection: Addresses::Barangay.all.map{|a| [a.name.titleize, a.id]}, prompt: "Select Barangay" %>
+                <%= aa.input :municipality_or_city_id, collection: Addresses::MunicipalityOrCity.all.map{|a| [a.name.titleize, a.id]}, prompt: "Select Municipality" %>
+                <%= aa.input :province_id, collection: Addresses::Province.all.map{|a| [a.name.titleize, a.id]}, prompt: "Select Province" %>
+              <% end %>
+              <div class="box-footer">
+                <%= f.submit "Save Taxpayer", class: "btn btn-primary btn-flat pull-right" %>
+              </div>
+            <% end %>

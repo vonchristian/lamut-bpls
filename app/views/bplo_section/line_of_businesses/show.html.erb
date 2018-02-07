@@ -1,0 +1,7 @@
+<div class="tab-pane active" id='barangay-businesses'>
+  <%=link_to bplo_section_line_of_business_path(@line_of_business, format: 'pdf') do %>
+    <i class="fa fa-user"></i>
+  <% end %>
+  <%= render 'businesses/index', businesses: @businesses %>
+
+</div>

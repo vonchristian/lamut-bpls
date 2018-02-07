@@ -1,0 +1,97 @@
+<% breadcrumb :tricycles %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="box box-default">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-md-2 hidden-xs">
+          <h3 class="box-title"> Tricycles </h3>
+        </div>
+        <div class="col-md-6 col-xs-12">
+          <%=form_tag tricycles_path, method: :get, class: "search-form" do %>
+            <div class="input-group">
+              <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search ..", id: 'taxpayer-search-form' %>
+              <span class="input-group-btn">
+                <%= button_tag(type: 'submit', id: "search-btn", class: "btn btn-flat") do %>
+                  <i class="fa fa-search"></i>
+                <% end %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+        <div class="col-md-3">
+          <% if policy([Tricycle.new]).new? %>
+            <%= link_to 'New MTOP Application', new_tricycle_registration_path, class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+      <div class="box-body">
+       <% if @tricycles.present? %>
+          <% @tricycles.each do |tricycle| %>
+            <%=link_to tricycle_path(tricycle) do %>
+              <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-3">
+                  <%=image_tag(tricycle.taxpayer.avatar.url(:large), height: 120, width: 120, class: "img-responsive img-square") %>
+                </div>
+                <div class="col-md-6 col-sm-4 col-xs-9">
+                  <span class="text-blue"><b><%=tricycle.name.try(:upcase) %> </b></span><br>
+                  <small class="text-muted"><i class="fa fa-user"></i> &nbsp; <%=tricycle.taxpayer.full_name %></small><br>
+                  <small class="text-muted"><i class="fa fa-map-marker"></i> &nbsp; <%=tricycle.taxpayer.full_address %></small><br>
+                  <small class="text-muted"><i class="fa fa-phone"></i> &nbsp; <%=tricycle.taxpayer_contact_number %></small><br><br>
+                  <p><span class="label bg-<%=tricycle.status_color %>"><%#=tricycle.tricycle_status %></span></p>
+
+                </div>
+                <div class="col-md-4 hidden-xs">
+                  <% if tricycle.assessed_for_current_year? %>
+                 <br>
+                 <br>
+                 <span class="text-muted"> <%= number_to_currency tricycle.balance %></span><br>
+                 <small class="text-muted"> BALANCE </small>
+                 <% end %>
+                </div>
+
+              </div>
+              <hr>
+            <% end %>
+          <% end %>
+          <center><%= paginate @tricycles %> </center>
+        <% else %>
+          No tricycles found.
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="row">
+        <div class="col-md-12">
+          <h2><center><%= Tricycle.count %></center></h2>
+          <center><small> TOTAL TRICYCLES </small>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="box box-default">
+      <div class="box-header">
+        <h3 class="box-title"> Tricycle Organizations </h3>
+      </div>
+      <div class="box-body">
+        <% @tricycle_organizations.each do |organization| %>
+          <%= link_to tricycle_organization_path(organization, format: 'pdf') do %>
+            <div class="row">
+              <div class="col-md-6">
+                <%= organization.abbreviated_name %><br>
+                <small class="text-muted"><%= organization.name %></small>
+              </div>
+              <div class="col-md-5">
+                <span class="pull-right badge bg-gray"><%= organization.tricycles.count %></span>
+              </div>
+            </div>
+            <br>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<% breadcrumb :business_business_fees, @business %>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header">
+              <div class="widget-user-image">
+                <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+              </div>
+              <!-- /.widget-user-image -->
+              <h3 class="widget-user-username">
+                <%=link_to business_path(@business) do %>
+                  <%= @business.name.try(:upcase) %></h3>
+                  <h5 class="widget-user-desc text-muted"><%= @business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+                <% end %>
+            </div>
+            <div class="box-body">
+              <% Fee.not_default.all.each do |fee| %>
+                <%= simple_form_for [@business, @business_fee], url: :bplo_section_business_business_fees do |f| %>
+                  <%= f.error_notification %>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <%= fee.name %>
+                      <%= f.input :fee_id, input_html: { value: fee.id}, as: :hidden %>
+                    </div>
+                    <div class="col-md-3">
+                      <span class="pull-right"> <%=number_to_currency fee.amount %></span>
+                    </div>
+                    <div class="col-md-2">
+                      <% if @business.fees.include?(fee) %>
+                          <span classs="btn"><i class="fa fa-toggle-on fa-2x text-green"></i></span>
+                        <% else %>
+                          <%=button_tag type: 'submit', class: 'btn no-padding', title: 'Add' do %>
+                            <i class="fa fa-toggle-off fa-2x"></i>
+                          <% end %>
+                        <% end %>
+                    </div>
+                  </div>
+                  <br>
+                <% end %>
+              <% end %>

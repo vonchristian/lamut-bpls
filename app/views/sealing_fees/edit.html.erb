@@ -1,0 +1,25 @@
+<% breadcrumb :new_business_sealing_fee, @sealing_fee.business %>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-gray">
+              <div class="widget-user-image">
+                <%=image_tag(@sealing_fee.business.avatar.url(:large), class: "img-circle") %>
+              </div>
+              <!-- /.widget-user-image -->
+              <h3 class="widget-user-username">
+                <%=link_to business_path(@sealing_fee.business) do %>
+                  <%= @sealing_fee.business.name.try(:upcase) %></h3>
+                  <h5 class="widget-user-desc text-muted"><%= @sealing_fee.business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+                <% end %>
+            </div>
+            <div class="box-body">
+<%= simple_form_for @sealing_fee, url: :sealing_fee do |f| %>
+  <%= f.input :calendar_year, as: :string, input_html: { value: Time.zone.now.strftime("%B %e, %Y") } %>
+  <%= f.input :amount %>
+  <div class="box-footer">
+    <%= f.submit "Save Assessment", class: "btn btn-primary pull-right" %>
+  </div>
+<% end %>

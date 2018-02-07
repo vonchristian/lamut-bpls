@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@collection.entry.commercial_document.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username"><%= @collection.collector.try(:full_name).try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><i class="fa fa-bookmark"></i> OR Number <%= @collection.reference_number %>
+            <% if current_user == @collection.collector %>
+              <span class="pull-right"> <%=link_to 'Edit OR NUMBER', edit_fire_department_collection_path(@collection), class: "btn btn-warning btn-xs" %></span>
+            <% end %>
+          </h5>
+          <h5 class="widget-user-desc text-muted"><i class="fa fa-calendar"></i> Date <%= @collection.entry_date.strftime("%B %e, %Y") %></h5>
+
+    </div>
+    <div class="box-body">
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      Fire Safety Inspection Fee
+    </div>
+    <div class="col-md-2">
+      <span class="pull-right">  <%=number_to_currency @collection.fire_safety_inspection_fee.try(:amount) %> </span>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      Storage Fee
+    </div>
+    <div class="col-md-2">
+      <span class="pull-right">  <%=number_to_currency @collection.storage_fee.try(:amount) %> </span>
+    </div>
+  </div>
+  <br>
+  <% if @collection.conveyance_clearance_fee.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-8">
+        Conveyance Clearance Fee
+      </div>
+      <div class="col-md-2">
+        <span class="pull-right">  <%=number_to_currency @collection.conveyance_clearance_fee.try(:amount) %> </span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <% if @collection.installation_clearance_fee.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-8">
+        Installation Clearance Fee
+      </div>
+      <div class="col-md-2">
+        <span class="pull-right">  <%=number_to_currency @collection.installation_clearance_fee.try(:amount) %> </span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <% if @collection.fire_code_fine.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-8">
+        Fire Code Administrative Fines
+      </div>
+      <div class="col-md-2">
+        <span class="pull-right">  <%=number_to_currency @collection.fire_code_fine.try(:amount) %> </span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <% if @collection.construction_tax.present? %>
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-8">
+        Construction Tax
+      </div>
+      <div class="col-md-2">
+        <span class="pull-right">  <%=number_to_currency @collection.construction_tax.try(:amount) %> </span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+<hr>
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-8">
+    <b>TOTAL</b>
+  </div>
+  <div class="col-md-2">
+    <span class="pull-right"><b><%= number_to_currency @collection.total %></b></span>
+  </div>
+</div>
+<br>

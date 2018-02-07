@@ -1,0 +1,60 @@
+<div class="tab-pane <%= 'active' if current_page?(business_business_permits_path(@business))%>" id='permits'>
+Permits
+<% if !@business.business_permit_applications.for_current_year.any? && policy([:businesses, :business_permit_application]).new? %>
+  <%= link_to 'New Business Permit Application', new_bplo_section_business_business_permit_application_path(@business) %>
+<% end %>
+<hr>
+<% if @business.business_requirements.not_verified.present? %>
+  <p class="text-muted"> Documents not yet submitted/verified </p>
+  <% @business.business_requirements.not_verified.each do |requirement| %>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1">
+        <span class="text-red"> <%= requirement.name %></span>
+      </div>
+    </div>
+    <br>
+  <% end %>
+  <hr>
+<% end %>
+
+<% if !@business.transient? && !@business.fire_dept_collected? %>
+<p class="text-red"> Fire Inspection Fee not yet collected. </p>
+<hr>
+<% end %>
+<% @business.business_permit_applications.each do |business_permit_application| %>
+  <div class="row">
+    <div class="col-md-2">
+      <%= business_permit_application.application_number %>
+    </div>
+    <div class="col-md-2">
+      <%= business_permit_application.application_date.strftime("%B %e, %Y") %>
+    </div>
+    <div class="col-md-2">
+      <%= business_permit_application.transaction_type.try(:titleize) %>
+    </div>
+    <div class="col-md-2">
+      <% if !business_permit_application.approved? && policy([:businesses, :business_permit_application]).new?  && @business.ready_for_approval?%>
+        <%= link_to new_business_permit_application_permit_approval_path(business_permit_application), title: "Approve Business Permit Application" do %>
+          <span class="btn btn-success btn-flat"><i class="fa fa-thumbs-up"></i> Approve </span>
+        <% end %>
+      <% end %>
+      <% if business_permit_application.approved? %>
+          <span class="label bg-green"> Approved </span>
+      <% end %>
+    </div>
+      <div class="col-md-1">
+        <% if business_permit_application.approved? && policy([:businesses, :business_permit_approval]).new? && !business_permit_application.expired? %>
+        <%=link_to 'Issue', business_permit_path(business_permit_application.business_permit_approval, format: 'pdf'), class: "btn btn-primary" %>
+
+       <% end %>
+    </div>
+    <div class="col-md-2">
+      <% if business_permit_application.approved? && policy([:businesses, :business_permit_application]).new? && !business_permit_application.expired? %>
+      <%=link_to 'Issue Temporary Permit', temporary_business_permit_path(business_permit_application.business_permit_approval, format: 'pdf'), class: "btn btn-primary" %>
+
+     <% end %>
+  </div>
+  </div>
+  <hr>
+<% end %>
+</div>

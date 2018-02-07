@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="box box-solid">
+      <div class="box-header">
+        <h3 class="box-title"> Update Tricyle Details </h3>
+      </div>
+      <div class="box-body">
+        <%=simple_form_for @tricycle do |f| %>
+          <%= f.input :plate_number %>
+          <%= f.input :mtop_number %>
+          <%= f.input :tricycle_organization_id, collection: TricycleOrganization.all.map{ |a| [a.abbreviated_name, a.id] } %>
+          <%= f.submit "Save", class: "btn btn-primary" %>
+         <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<%= simple_form_for @fee, url: :bplo_section_settings_fees do |f| %>
+  <%= f.error_notification %>
+  <%=f.input :name %>
+  <%= f.input :amount %>
+  <%= f.input :default_fee, label: 'Default Fee' %>
+  <%= f.input :debit_account_id, collection: Accounting::Account.all.map{|a| [a.name, a.id] } %>
+  <span class="help-block"> Account to debit during assessment </span>
+  <%= f.input :credit_account_id, collection: Accounting::Account.all.map{|a| [a.name, a.id] } %>
+  <span class="help-block"> Revenue account for this fee </span>
+  <%= f.submit 'Create Fee' %>
+<% end %>

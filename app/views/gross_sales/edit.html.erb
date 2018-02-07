@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="box box-solid">
+      <div class="box-header with-border">
+        <div class="widget-user-header">
+
+          <h3 class="widget-user-username"><%#= @business.name.upcase %></h3>
+          <%# @business.taxpayers.distinct.each do |taxpayer| %>
+            <h5 class="widget-user-desc"><%#=image_tag(taxpayer.avatar.url(:small), class: "img-circle") %> &nbsp; &nbsp; <%#=taxpayer.full_name %></h5>
+          <%# end %>
+        </div>
+      </div>
+      <div class="box-body">
+        <h4> Gross Sale Details </h4>
+        <hr>
+<%= simple_form_for @gross_sale, url: :gross_sale do |f| %>
+  <%= f.input :amount, as: :string %>
+  <%= f.input :calendar_year, as: :string, input_html: { value: Time.zone.now.last_year.end_of_year.strftime("%B %e, %Y"), class: "datepicker" }%>
+
+  <div class="box-footer">
+    <%= f.submit "Save Gross Sale", class: 'btn btn-primary btn-flat pull-right' %>
+  </div>
+<% end %>

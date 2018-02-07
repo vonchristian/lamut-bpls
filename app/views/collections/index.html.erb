@@ -1,0 +1,129 @@
+<div class="row">
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow"><i class="fa fa-check"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Assessed</span>
+        <span class="info-box-number"><%=number_to_currency Accounting::Revenue.balance(from_date: Time.zone.now.beginning_of_year, to_date: Time.zone.now.end_of_year)%></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+
+
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-rub"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Collected </span>
+        <span class="info-box-number"><%=number_to_currency Accounting::Account.find_by_name("Cash - Local Treasury").balance(from_date: Time.zone.now.beginning_of_year, to_date: Time.zone.now.end_of_year) %></span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+
+  <!-- fix for small devices only -->
+  <div class="clearfix visible-sm-block"></div>
+
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><i class="fa fa-info"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Uncollected</span>
+        <span class="info-box-number"><%=number_to_currency Accounting::Revenue.balance(from_date: Time.zone.now.beginning_of_year, to_date: Time.zone.now.end_of_year)- (Accounting::Account.find_by_name("Cash - Local Treasury").balance(from_date: Time.zone.now.beginning_of_year, to_date: Time.zone.now.end_of_year))   %>
+</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <!-- /.col -->
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-primary">
+      <div class="box-header">
+        <h3 class="box-title"> Collections Per Barangay </h3>
+      </div>
+      <div class="box-body">
+        <div class="row hidden-xs">
+          <div class="col-md-3 col-xs-12">
+            <b>BARANGAY</b>
+          </div>
+          <div class="col-md-3 col-xs-4">
+            <b class="pull-right"> ASSESSED </b>
+          </div>
+          <div class="col-md-3 col-xs-4">
+            <b class="pull-right"> COLLECTED </b>
+          </div>
+          <div class="col-md-3 col-xs-4">
+            <b class="pull-right"> UNCOLLECTED </b>
+          </div>
+        </div>
+        <hr>
+        <% Addresses::Barangay.in_lamut.each do |barangay| %>
+          <%=link_to monitoring_barangay_path(barangay) do %>
+            <div class="row">
+              <div class="col-md-3 col-xs-12">
+                <%= barangay.name %>
+              </div>
+              <div class="col-md-3 col-xs-4">
+                <span class="text-black pull-right"> <%=number_to_currency barangay.businesses.assessments %></span>
+              </div>
+              <div class="col-md-3 col-xs-4">
+                <span class="text-green pull-right"> <%=number_to_currency barangay.businesses.payments %></span>
+              </div>
+              <div class="col-md-3 col-xs-4">
+                <span class="text-red pull-right"> <%=number_to_currency barangay.businesses.balances %></span>
+              </div>
+            </div>
+            <br>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+      <div class="box-header">
+        <h3 class="box-title"> Collections </h3>
+      </div>
+      <div class="box-body">
+        <div class="table table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th> OR # </th>
+                <th> Taxpayer/Business </th>
+                <th> Details </th>
+                <th> Employee </th>
+                <th> <span class="pull-right"> Amount </span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% Accounting::Entry.payment.each do |entry| %>
+                <tr>
+                  <td><%=link_to entry.reference_number, collection_path(entry) %></td>
+                  <td><%= entry.commercial_document.try(:name) %></td>
+                  <td><%= entry.description %></td>
+                  <td><%= entry.recorder.try(:full_name) %></td>
+                  <td><span class="pull-right"><%= number_to_currency entry.debit_amounts.sum(:amount) %></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>

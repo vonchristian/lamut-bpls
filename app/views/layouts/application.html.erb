@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BPLS</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+  <body class="hold-transition skin-black-light sidebar-mini">
+    <div class="wrapper">
+      <%=render "layouts/shared/header" %>
+      <% if current_user.collection_officer? %>
+        <%=render "treasury_department/sidebar" %>
+      <% end %>
+      <% if current_user.bplo_officer? %>
+        <%=render "layouts/shared/sidebar" %>
+      <% end %>
+      <% if current_user.engineering_officer? %>
+        <%=render "layouts/shared/sidebar" %>
+      <% end %>
+      <% if current_user.zoning_officer? %>
+        <%=render "layouts/shared/sidebar" %>
+      <% end %>
+      <% if current_user.system_administrator? %>
+        <%=render "layouts/shared/sidebar" %>
+      <% end %>
+      <% if current_user.mayors_office_staff? %>
+        <%=render "layouts/shared/sidebar" %>
+      <% end %>
+
+
+      <% if current_user.fire_safety_officer? %>
+        <%=render "fire_department/sidebar" %>
+      <% end %>
+      <div class="content-wrapper">
+        <section class="content">
+          <ol class="breadcrumb">
+            <li><%= breadcrumbs pretext: "You are here: ",
+                separator: " &rsaquo; " %></li>
+          </ol>
+          <%=render "layouts/shared/flash" %>
+          <%= yield %>
+        </section>
+      </div>
+        <%=render 'layouts/shared/footer' %>
+    </div>
+  </body>
+</html>

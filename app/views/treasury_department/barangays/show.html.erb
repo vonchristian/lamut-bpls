@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-widget widget-user-2">
+      <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+          <%=image_tag(@barangay.logo.url(:small), class: "img-square img-responsive") %>
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username">BARANGAY <%= @barangay.name.upcase %></h3>
+        <br>
+
+      </div>
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#barangay-businesses" data-toggle="tab">Businesses</a></li>
+        <li><a href="#barangay-reports" data-toggle="tab">Reports</a></li>
+        <li><a href="#barangay-collections" data-toggle="tab">Collections</a></li>
+
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="barangay-businesses">
+          <%= render '/treasury_department/businesses/index', businesses: @businesses %>
+        </div>
+        <%= render '/treasury_department/barangays/reports' %>
+        <%= render '/treasury_department/barangays/collections' %>
+
+
+      </div>
+    </div>
+  </div>
+</div>

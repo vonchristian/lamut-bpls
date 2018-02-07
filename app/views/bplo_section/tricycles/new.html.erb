@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+    <div class="box-header">
+      <h3 class="box-title"> Tricycle Information </h3>
+    </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          </div>
+          <div class="col-md-5">
+            <%= simple_form_for [@taxpayer, @tricycle], url: :bplo_section_taxpayer_tricycles do |f| %>
+              <%= f.error_notification %>
+              <p> Tricycle Details </p>
+                <%= f.input :mtop_number %>
+                <%= f.input :plate_number %>
+                <hr>
+              <p> Application Details </p>
+                <%= f.simple_fields_for :tricycle_permit_applications do |t| %>
+                  <%= t.input :transaction_type, collection: Tricycles::TricyclePermitApplication.transaction_types.keys.to_a.map{ |a| [a.titleize, a] }, as: :radio_buttons %>
+                  <%= t.input :application_date, as: :string, input_html: { class: "datepicker" } %>
+                  <%= t.input :application_number %>
+                <% end %>
+                <hr>
+                <p> Address Details </p>
+                <%= f.simple_fields_for :addresses do |a| %>
+                  <%= a.input :barangay_id, collection: Addresses::Barangay.all.map{|a| [a.name.titleize, a.id]}, prompt: "Select Barangay" %>
+                  <%= a.input :municipality_or_city_id, input_html: { value: Addresses::MunicipalityOrCity.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+                  <%= a.input :province_id, input_html: { value: Addresses::Province.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+                <% end %>
+              <%= f.submit "Save Tricycle", class: "btn btn-primary btn-flat pull-right" %>
+            <% end %>

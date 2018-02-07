@@ -1,0 +1,483 @@
+<% breadcrumb :settings %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="box box-danger">
+      <div class="box-header">
+        <h3 class="box-title"> Line of Businesses </h3>
+        <%= link_to 'Add Line of Business', new_bplo_section_settings_line_of_business_path, class: "btn btn-danger btn-sm pull-right" %>
+
+      </div>
+      <div class="box-body">
+        <% @mayors_permit_fee_business_categories.each do |category| %>
+          <p> <%= category.name %></p>
+          <% category.line_of_businesses.each do |line_of_business| %>
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-7">
+                <p class="text-muted"> <%= line_of_business.name %> </p>
+              </div>
+              <div class="col-md-2">
+                <span class="pull-right"><%=number_to_currency line_of_business.mayors_permit_fee_amount %></span>
+              </div>
+              <div class="col-md-2">
+                <% if policy(BploSection::Settings::LineOfBusiness.new).edit? %>
+                  <%= link_to 'Edit', edit_bplo_section_settings_line_of_business_path(line_of_business) %>
+                <% end %>
+              </div>
+            </div>
+            <br>
+          <% end %>
+        <% end %>
+        <h4>Business Tax Categories</h4>
+        <% BploSection::Settings::GrossSalesTaxBusinessCategory.all.each do |gross_sales_tax| %>
+        <p> <%= gross_sales_tax.name %></p>
+          <% gross_sales_tax.gross_sales_taxes.order(:minimum_gross_sale).each do |tax| %>
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-6">
+                <span class="text-muted">
+                  <%= number_to_currency tax.minimum_gross_sale %> to <%= number_to_currency tax.maximum_gross_sale %>
+                </span>
+              </div>
+              <div class="col-md-2">
+                <% if tax.tax_type_percentage? %>
+                RATE <%= tax.rate%>
+                <% elsif tax.tax_type_fixed_amount? %>
+                  <%= number_to_currency tax.rate %>
+                  <% elsif tax.tax_type_percentage_with_tax_on_excess? %>
+                  <%= number_to_currency tax.tax_rate_for_excess %> in excess of <%= number_to_currency tax.gross_limit %><br>
+                   plus <%= tax.rate %> for the first <%= number_to_currency tax.gross_limit %>
+
+                <% end %>
+                <% if tax.minimum_tax_amount.present? %>
+                  <small class="text-muted"> <%= number_to_currency tax.minimum_tax_amount %></small>
+                  <span class="help-block"> MINIMUM TAX </span>
+                <% end %>
+              </div>
+              <div class="col-md-2">
+                <%= link_to  edit_bplo_section_settings_tax_path(tax) do %>
+                  <span class="text-danger" title="Edit Tax" data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-danger">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Employees </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy(User.new).new? %>
+              <%= link_to new_bplo_section_settings_user_path, title: 'New Employee' do  %>
+                <span class="btn btn-danger btn-xs pull-right" title="New Employee" data-toggle="tooltip"><i class="fa fa-user-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% @users.each do |user| %>
+          <%=link_to bplo_section_settings_user_path(user) do %>
+            <div class="row">
+              <div class="col-md-2">
+                <%=image_tag(user.avatar.url(:small), height: 35, width: 35, class: "img-circle") %>
+              </div>
+              <div class="col-md-8">
+                <b><%=user.full_name %></b><br>
+                <small class="text-muted"> <%=user.role.try(:titleize) %></small>
+              </div>
+            </div>
+            <hr>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Fees </h3>
+          </div>
+          <div class="col-md-3">
+            <span class="pull-right">
+              <% if policy(Fee.new).new? %>
+                <%= link_to new_bplo_section_settings_fee_path, title: "New Fee", class: "pull-right" do %>
+                  <span class="btn  btn-xs bg-red pull-right" title="New Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> </span>
+                <% end %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% @fees.each do |fee| %>
+          <div class="row">
+            <div class="col-md-7">
+              <%=fee.name %>
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right"><%=number_to_currency fee.amount %>
+            </div>
+            <div class="col-md-1">
+              <% if policy(Fee.new).edit? %>
+                <%= link_to  edit_bplo_section_settings_fee_path(fee) do %>
+                  <span class="text-danger" title="Edit Fee" data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <br>
+        <% end %>
+        <br>
+        <p class="text-muted">Sanitary Inspection Fees </p>
+        <% if policy([:storage_permit_fee]).new? %>
+          <%=link_to 'New Sanitary Inspection Fee', new_fees_settings_sanitary_inspection_fee_path %>
+        <% end %>
+        <% @sanitary_inspection_fees.each do |fee| %>
+          <div class="row">
+            <div class="col-md-9">
+              <%=fee.minimum_area %>sq.m.  -  <%= fee.maximum_area %>sq.m.
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right"><%=number_to_currency fee.amount %>
+            </div>
+          </div>
+          <br>
+        <% end %>
+        <hr>
+        <p class="text-muted">Storage Permit Fees </p>
+        <% if policy([:storage_permit_fee]).new? %>
+          <%=link_to 'New Storage Permit Fee', new_fees_settings_storage_permit_fee_path %>
+        <% end %>
+        <% @storage_permit_fees.each do |fee| %>
+          <div class="row">
+            <div class="col-md-9">
+              <p class="text-muted"> <%= fee.name %></p>
+              <%=number_to_currency fee.minimum_value, unit: "" %> Liters -  <%= number_to_currency fee.maximum_value, unit: "" %> Liters
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right"><%=number_to_currency fee.amount %>
+            </div>
+          </div>
+          <br>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-danger">
+      <div class="box-header">
+        <h3 class="box-title"> Required Documents </h3>
+          <span class="pull-right">
+            <% if policy(BploSection::Settings::RequiredDocument.new).new? %>
+              <%= link_to new_bplo_section_settings_required_document_path, title: "New Required Document", class: "pull-right" do %>
+                <span class="btn  btn-xs bg-red pull-right" title="New Required Document" data-toggle="tooltip"><i class="fa fa-plus"></i> </span>
+              <% end %>
+            <% end %>
+          </span>
+      </div>
+      <div class="box-body">
+        <% BploSection::Settings::RequiredDocument.all.each do |required_document| %>
+          <div class="row">
+            <div class="col-md-9">
+              <%=required_document.name %>
+            </div>
+            <div class="col-md-3">
+              <% if policy(BploSection::Settings::RequiredDocument.new).edit? %>
+                <span class="pull-right"><%= link_to "Edit", edit_bplo_section_settings_required_document_path(required_document), class: 'text-red' %></span>
+              <% end %>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="box box-solid">
+      <br>
+      <h3><center><%= BploSection::Settings::LatePaymentSurcharge.order(created_at: :asc).last.try(:rate)  %> </center></h3>
+      <small class="text-muted"><center> SURCHARGE RATE</center> </small>
+      <br>
+      <% if policy(BploSection::Settings::LatePaymentSurcharge.new).new? %>
+        <small class="text-muted"><center> <%=link_to 'Set Rate', new_bplo_section_settings_late_payment_surcharge_path, class: "btn btn-danger btn-xs" %></center> </small>
+      <% end %>
+      <br />
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="box box-solid">
+      <br>
+      <h3><center><%= BploSection::Settings::InterestRate.order(created_at: :asc).last.try(:rate)  %> </center></h3>
+      <small class="text-muted"><center> INTEREST RATE</center> </small>
+      <br>
+      <% if policy(BploSection::Settings::InterestRate.new).new? %>
+        <small class="text-muted"><center> <%=link_to 'Set Rate', new_bplo_section_settings_interest_rate_path, class: "btn btn-danger btn-xs" %></center> </small>
+      <% end %>
+      <br>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Departments </h3>
+        <span class="pull-right">
+          <% if policy(BploSection::Settings::Department.new).new? %>
+            <%= link_to new_bplo_section_settings_department_path, title: "New Department" do %>
+              <span class="btn btn-danger btn-flat pull-right btn-xs" title="New Department" data-toggle="tooltip"><i class="fa fa-plus-circle"></i> </span>
+            <% end %>
+          <% end %>
+        </span>
+      </div>
+      <div class="box-body">
+        <% @departments.each do |department| %>
+          <div class="row">
+            <div class="col-md-9">
+              <%=department.name %>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Type Of Organizations </h3>
+        <span class="pull-right">
+          <% if policy(BploSection::Settings::OwnershipType.new).new? %>
+            <%= link_to new_bplo_section_settings_ownership_type_path, title: "New Type of Organization" do %>
+              <span class="btn btn-danger btn-flat pull-right btn-xs" title="New Type of Organization" data-toggle="tooltip"><i class="fa fa-plus-circle"></i> </span>
+            <% end %>
+          <% end %>
+        </span>
+      </div>
+      <div class="box-body">
+        <% @ownership_types.each do |type| %>
+          <div class="row">
+            <div class="col-md-9">
+              <%=type.name %>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Signatories </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy(BploSection::Settings::Signatory.new).new? %>
+              <%= link_to new_bplo_section_settings_signatory_path, title: 'New Signatory' do  %>
+                <span class="btn btn-primary" title="New Signatory" data-toggle="tooltip"><i class="fa fa-user-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% @signatories.each do |user| %>
+            <div class="row">
+              <div class="col-md-2">
+                <%#=image_tag(user.avatar.url(:small), height: 35, width: 35, class: "img-circle") %>
+              </div>
+              <div class="col-md-10">
+                <b><%=user.full_name %></b><br>
+                <small class="text-muted"> <%=user.designation.try(:titleize) %></small>
+              </div>
+            </div>
+            <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Permit Application Date </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy(BploSection::Settings::PermitApplicationDateRange.new).new? %>
+              <%= link_to new_bplo_section_settings_permit_application_date_range_path, title: 'New Permit Application Date' do  %>
+                <span class="btn btn-primary" title="New Permit Application Date" data-toggle="tooltip"><i class="fa fa-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <p class="text-muted"> Start Date: <%=BploSection::Settings::PermitApplicationDateRange.order(created_at: :asc).last.start_date.strftime("%B %e, %Y") %>
+        <hr />
+        <p class="text-muted"> End Date: <%=BploSection::Settings::PermitApplicationDateRange.order(created_at: :asc).last.end_date.strftime("%B %e, %Y") %>
+      </div>
+    </div>
+  </div>
+  <!--MTOP Tricycle Fee Settings -->
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> MTOP Fees Settings </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy(TricycleFee.new).new? %>
+              <%= link_to new_bplo_section_settings_tricycle_fee_path, title: 'New Tricycle Fee' do  %>
+                <span class="btn btn-primary" title="New Tricycle Fee" data-toggle="tooltip"><i class="fa fa-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% TricycleFee.all.each do |fee| %>
+          <div class="row">
+            <div class="col-md-7">
+              <%=fee.name %>
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right"><%=number_to_currency fee.amount %>
+            </div>
+            <div class="col-md-1">
+                <% if policy([:tricycle_fee]).edit? %>
+                  <%= link_to  edit_bplo_section_settings_tricycle_fee_path(fee) do %>
+                    <span class="text-danger" title="Edit Fee" data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                  <% end %>
+                <% end %>
+            </div>
+          </div>
+          <hr>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Tricycle Requirements </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy([:tricycles, :tricycle_requirement]).new? %>
+              <%= link_to new_bplo_section_settings_tricycle_requirement_path, title: 'New Tricycle Requirement' do  %>
+                <span class="btn btn-primary" title="New Tricycle Requirement" data-toggle="tooltip"><i class="fa fa-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% TricycleRequirement.all.each do |requirement| %>
+          <div class="row">
+            <div class="col-md-10">
+              <%=requirement.name %><br>
+              <small class="text-muted"> <%=requirement.department_name %></small>
+            </div>
+            <div class="col-md-1">
+              <% if policy([:tricycles, :tricycle_requirement]).edit? %>
+                <%= link_to edit_bplo_section_settings_tricycle_requirement_path(requirement) do %>
+                  <span class="text-danger" title="Edit " data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <br>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="box box-default">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-md-9">
+            <h3 class="box-title"> Tricycle Organizations </h3>
+          </div>
+          <div class="col-md-3">
+            <% if policy([:tricycles, :tricycle_organization]).new? %>
+              <%= link_to new_bplo_section_settings_tricycle_organization_path, title: 'New Tricycle Requirement' do  %>
+                <span class="btn btn-primary" title="New Tricycle Requirement" data-toggle="tooltip"><i class="fa fa-plus"></i></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="box-body">
+        <% TricycleOrganization.all.each do |organization| %>
+          <div class="row">
+            <div class="col-md-10">
+              <%=organization.abbreviated_name %><br>
+              <small class="text-muted"> <%=organization.name %></small>
+            </div>
+            <div class="col-md-1">
+              <% if policy([:tricycles, :tricycle_organization]).edit? %>
+                <%= link_to edit_bplo_section_settings_tricycle_organization_path(organization) do %>
+                  <span class="text-danger" title="Edit " data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <br>
+        <% end %>
+      </div>
+    </div>
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <div class="row">
+            <div class="col-md-9">
+              <h3 class="box-title"> Cockpit Personnel Fees </h3>
+            </div>
+            <div class="col-md-3">
+              <span class="pull-right">
+                <% if policy(Fee.new).new? %>
+                  <%= link_to new_bplo_section_settings_cockpit_personnel_fee_path, title: "New Fee", class: "pull-right" do %>
+                    <span class="btn  btn-xs bg-red pull-right" title="New Fee" data-toggle="tooltip"><i class="fa fa-plus"></i> </span>
+                  <% end %>
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="box-body">
+          <% CockpitPersonnelFee.all.each do |fee| %>
+            <div class="row">
+              <div class="col-md-7">
+                <%=fee.name %>
+              </div>
+              <div class="col-md-3">
+                <span class="pull-right"><%=number_to_currency fee.amount %>
+              </div>
+              <div class="col-md-1">
+                <% if policy(CockpitPersonnelFee.new).edit? %>
+                  <%= link_to  edit_bplo_section_settings_cockpit_personnel_fee_path(fee) do %>
+                    <span class="text-danger" title="Edit Fee" data-toggle="tooltip"> <i class="fa fa-pencil"></i></span>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <br>
+          <% end %>
+          <br>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

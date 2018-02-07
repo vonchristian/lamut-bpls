@@ -1,0 +1,124 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title"> Business Permit Application Details </h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          </div>
+          <div class="col-md-5">
+        <%= simple_form_for @permit_application, url: :business_registrations do |f| %>
+          <%= f.error_notification %>
+          <h4> Application Details </h4>
+          <br />
+          <div class="row">
+            <div class="col-md-6">
+              <%= f.input :application_number %>
+            </div>
+            <div class="col-md-6">
+              <%= f.input :application_date, as: :string, input_html: { value: Time.zone.now.strftime("%B %e, %Y"), class: "datepicker" }%>
+            </div>
+          </div>
+
+            <%= f.input :transaction_type, collection: Businesses::BusinessPermits::BusinessPermitApplication.transaction_types.keys.to_a.map{ |a| [a.titleize, a] }, as: :radio_buttons %>
+            <%= f.input :ownership_type_id, collection: BploSection::Settings::OwnershipType.all.map{|a| [a.name.titleize, a.id] }, label: "Type of Business", as: :radio_buttons %>
+            <%= f.input :mode_of_payment_id, collection: BploSection::Settings::ModeOfPayment.all.map{|a| [a.mode.titleize, a.id] }, as: :radio_buttons %>
+          <hr>
+          <h4> Taxpayer Details </h4>
+
+              <%= f.input :taxpayer_last_name, label: "Last Name" %>
+
+              <%= f.input :taxpayer_first_name, label: "First Name" %>
+
+              <%= f.input :taxpayer_middle_name, label: "Middle Name"%>
+              <%= f.input :taxpayer_contact_number, label: "Taxpayer Contact Number"%>
+
+
+          <%= f.input :taxpayer_sex, label: "Sex", collection: Taxpayer.sexes.keys.to_a.map{|a| [a.titleize, a] }, as: :radio_buttons %>
+          <p> Taxpayer Address </p>
+
+              <%= f.input :taxpayer_street, label: 'Street/Sitio' %>
+
+              <%= f.input :taxpayer_barangay, label: 'Barangay' %>
+
+              <%= f.input :taxpayer_municipality_or_city, label: 'Municipality', input_html: { value: "Lamut" } %>
+
+              <%= f.input :taxpayer_province, label: 'Province', input_html: { value: "Ifugao" } %>
+          <hr />
+          <hr/>
+          <h4> Business Details </h4>
+          <br>
+          <%= f.input :business_name %>
+          <%= f.input :business_capital %>
+
+              <%= f.input :employee_count, label: "Number of Employees" %>
+              <%= f.input :business_contact_number, label: "Business Contact Number" %>
+              <%= f.input :business_email, label: "Business Email" %>
+
+
+          <p> Business Address </p>
+
+              <%= f.input :street, label: 'Street/Sitio' %>
+
+              <%= f.input :barangay_id, collection: Addresses::Barangay.in_lamut.map{|a| [a.name.titleize, a.id]}, prompt: "Select Barangay" %>
+
+              <%= f.input :municipality_or_city_id, input_html: { value: Addresses::MunicipalityOrCity.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+
+              <%= f.input :province_id, input_html: { value: Addresses::Province.order(created_at: :asc).first.id }, readonly: true, as: :hidden %>
+          <hr />
+
+
+          <%= f.input :gross_sales_tax_business_category_id, collection: BploSection::Settings::GrossSalesTaxBusinessCategory.all.map{|a| [a.name, a.id] }, as: :radio_buttons %>
+          <hr>
+          <p class="text-muted"> Exemptions </p>
+          <%= f.input :business_tax_exempted, as: :boolean %>
+          <hr>
+          <p class="text-muted"> Business Area Details </p>
+          <%= f.input :business_area, label: 'Business Area (in sq.m.)' %>
+              <%= f.input :business_area_rented, as: :boolean, input_html: { id: 'business_area_rented'} %>
+              <div id="rent_details" style="display:none;">
+              <%= f.input :monthly_rent, as: :string %>
+              <%= f.input :lessor_full_name, label: "Lessor's Full Name" %>
+              <%= f.input :lessor_address, label: "Lessor's Address" %>
+              <%= f.input :lessor_contact_number, label: "Lessor's Contact Number" %>
+            </div>
+            <p class="text-muted"> For Public Market Vendors </p>
+
+            <%= f.input :public_market_vendor, as: :boolean, input_html: { id: 'business_public_market_vendor' } %>
+            <div id="vendor_details" style="display:none;">
+              <%= f.input :public_market_tenant_id, collection: PublicMarketTenant.all.map{|a| [a.vendor_type.titleize, a.id] }, as: :radio_buttons, label: "Vendor Type:" %>
+            </div>
+
+              <div class="box-footer">
+            <%= f.submit "Save Application", class: "btn btn-primary btn-flat pull-right" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+        <script>
+          var checkbox = document.getElementById('business_area_rented');
+          var details_div = document.getElementById('rent_details');
+          checkbox.onchange = function() {
+             if(this.checked) {
+               details_div.style['display'] = 'block';
+             } else {
+               details_div.style['display'] = 'none';
+             }
+          };
+        </script>
+
+        <script>
+          var vendor_checkbox = document.getElementById('business_public_market_vendor');
+          var vendor_details_div = document.getElementById('vendor_details');
+          vendor_checkbox.onchange = function() {
+             if(this.checked) {
+               vendor_details_div.style['display'] = 'block';
+             } else {
+               vendor_details_div.style['display'] = 'none';
+             }
+          };
+        </script>

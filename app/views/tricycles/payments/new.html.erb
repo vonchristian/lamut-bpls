@@ -1,0 +1,157 @@
+
+<% breadcrumb :new_tricycle_assessment, @tricycle %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@tricycle.taxpayer.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to tricycle_path(@tricycle) do %>
+          <%= @tricycle.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @tricycle.taxpayer_full_name %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+
+      <br>
+            <div class="row">
+              <div class="col-md-8">
+                <h4> Fees </h4>
+              </div>
+            </div>
+            <br>
+            <small class="text-muted">&nbsp; &nbsp; FEES </small><p></p>
+
+            <% @tricycle.tricycle_fees.each do |fee| %>
+              <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-7">
+                  <%= fee.name %>
+                </div>
+                <div class="col-md-3">
+                  <span class="pull-right"><%=number_to_currency fee.amount %></span>
+                </div>
+              </div>
+              <br>
+            <% end %>
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-8">
+                Fare Adjustment Fee
+              </div>
+              <div class="col-md-2">
+                  <span class="pull-right"><%=number_to_currency @tricycle.fare_adjustment_fees.for_current_year %></span>
+              </div>
+            </div>
+            <br>
+          <small class="text-danger">&nbsp; &nbsp; SURCHARGES </small><p></p>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+              Surcharges <br>
+            </div>
+            <div class="col-md-2">
+              <span class="pull-right"><%=number_to_currency @tricycle.surcharges.for_current_year %></span>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+              Interests <br>
+            </div>
+            <div class="col-md-2">
+              <%if @tricycle.late_registration_interests.for_current_year.zero? && policy([:tricycles, :surcharge]).create?  && @tricycle.late_registration? %>
+                <%=link_to tricycle_surcharges_path(@tricycle), title: 'Assess Surchages', method: :create do %>
+                  <span class="btn btn-primary btn-xs" title="Assess Surcharges" data-toggle="tooltip"><i class="fa fa-plus"></i> Assess </span>
+                <% end %>
+                <% else %>
+                  <span class="pull-right"><%=number_to_currency @tricycle.late_registration_interests.for_current_year %></span>
+              <% end %>
+            </div>
+          </div>
+          <hr>
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-7">
+                <b>TOTAL</b>
+              </div>
+              <div class="col-md-3">
+                <span class="pull-right"><b><%=number_to_currency @tricycle.total_fees %></b></span>
+              </div>
+            </div>
+          <hr>
+
+              <%= simple_form_for @entry, url: :tricycle_payments do |f| %>
+                <%= f.error_notification %>
+                <!-- tricycle Fees -->
+                <% if @tricycle.tricycle_fees.present? %>
+                  <% @tricycle.tricycle_fees.each do |fee| %>
+                    <%=f.simple_fields_for :debit_amounts do |d|  %>
+                      <%= d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount },  as: :hidden %>
+                      <%= d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden %>
+                    <% end %>
+                    <%=f.simple_fields_for :credit_amounts do |c|  %>
+                      <%= c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount },  as: :hidden %>
+                      <%= c.input :account_id, input_html: { value: fee.debit_account_id}, as: :hidden %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <!-- Surcharges -->
+                <% if @tricycle.surcharges.for_current_year.present? && @tricycle.surcharges.for_current_year > 0 %>
+                  <%=f.simple_fields_for :debit_amounts do |d|  %>
+                    <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.surcharges.for_current_year }, as: :hidden  %>
+                    <%=d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden %>
+                  <% end %>
+                  <%=f.simple_fields_for :credit_amounts do |c|  %>
+                    <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.surcharges.for_current_year}, as: :hidden  %>
+                    <%=c.input :account_id, input_html: { value: Businesses::Surcharge.new.debit_account.id }, as: :hidden  %>
+                  <% end %>
+                <% end %>
+                <!-- Interests -->
+                <% if @tricycle.late_registration_interests.for_current_year.present? && @tricycle.late_registration_interests.for_current_year > 0 %>
+                  <%=f.simple_fields_for :debit_amounts do |d|  %>
+                    <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.late_registration_interests.for_current_year }, as: :hidden  %>
+                    <%=d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden %>
+                  <% end %>
+                  <%=f.simple_fields_for :credit_amounts do |c|  %>
+                    <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.late_registration_interests.for_current_year}, as: :hidden  %>
+                    <%=c.input :account_id, input_html: { value: Businesses::LateRegistrationInterest.new.debit_account.id }, as: :hidden  %>
+                  <% end %>
+                <% end %>
+                  <!-- Fare Adjustment Fee-->
+                  <% if !@tricycle.fare_adjustment_fees.for_current_year.zero? %>
+                    <%=f.simple_fields_for :debit_amounts do |d|  %>
+                      <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.fare_adjustment_fees.for_current_year }, as: :hidden  %>
+                      <%=d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden %>
+                    <% end %>
+                    <%=f.simple_fields_for :credit_amounts do |c|  %>
+                      <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @tricycle.fare_adjustment_fees.for_current_year }, as: :hidden  %>
+                      <%=c.input :account_id, input_html: {value: Fees::FareAdjustmentFee.new.debit_account.id}, as: :hidden %>
+                    <% end %>
+                  <% end %>
+
+                  <%= f.input :reference_number, required: true, label: "OR Number" %>
+                  <%= f.input :entry_date, label: "Payment Date", as: :string, input_html: { class: "datepicker", default: Date.today } %>
+                  <%= f.input :description, input_html: { value: "Payment of fees, surcharges and interests" }, as: :hidden %>
+                  <div class="box-footer">
+                    <%= f.submit "Save Payment", class: "btn btn-primary btn-flat pull-right", data: { disable_with: "Saving Payment..."} %>
+                  </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

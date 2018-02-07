@@ -1,0 +1,45 @@
+<% breadcrumb :new_special_permit_assessment, @special_permit %>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="box box-widget widget-user-2">
+      <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username"><%= @special_permit.name.try(:upcase) %></h3>
+
+          <h5 class="widget-user-desc">&nbsp; &nbsp; &nbsp; &nbsp; <%=image_tag(@special_permit.taxpayer.avatar.url(:small), height: 35, width: 35, class: "img-circle") %> &nbsp; &nbsp; <%=@special_permit.taxpayer_full_name %></h5>
+
+
+      </div>
+    <div class="nav-tabs-custom">
+      <div class="box-body">
+        <small class="text-muted">FEES </small>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-8">
+              Permit Fee
+            </div>
+            <div class="col-md-3">
+              <%=number_to_currency @special_permit.total_fees %></h4>
+            </div>
+          </div>
+          <hr>
+          <%= simple_form_for @payment, url: :special_permit_payments do |f| %>
+            <%= f.error_notification %>
+            <%= f.input :entry_date, as: :string, input_html: { class: "datepicker" }, label: "Payment Date" %>
+            <%= f.input :reference_number, required: true, label: "OR Number" %>
+            <%= f.input :description, input_html: { value: "Payment of permit fees"}, as: :hidden %>
+              <%=f.simple_fields_for :debit_amounts do |d|  %>
+                <%= d.input :amount, input_html: { autocomplete: "off", class: "input-lg", value: @special_permit.total_fees}, as: :hidden %>
+                <%= d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden %>
+              <% end %>
+              <%=f.simple_fields_for :credit_amounts do |c|  %>
+                <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @special_permit.total_fees },  as: :hidden %>
+                <%=c.input :account_id, input_html: { value: Accounting::Account.find_by(name: "Accounts Receivable - Special Permit Fees").id}, as: :hidden %>
+              <% end %>
+            <%= f.submit "Save Payment", class: "btn btn-primary pull-right" %>
+          <% end %>

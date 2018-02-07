@@ -1,0 +1,8 @@
+CockpitPersonnelFee.find_or_create_by(name: "Promoter/Host Fee", amount: 220)
+CockpitPersonnelFee.find_or_create_by(name: "Pit Manager Fee", amount: 220)
+CockpitPersonnelFee.find_or_create_by(name: "Referee Fee", amount: 110)
+CockpitPersonnelFee.find_or_create_by(name: "Bet Taker Fee", amount: 110)
+CockpitPersonnelFee.find_or_create_by(name: "Bet Manager Fee", amount: 110)
+CockpitPersonnelFee.find_or_create_by(name: "Gaffer Fee", amount: 110)
+CockpitPersonnelFee.find_or_create_by(name: "Cashier Fee", amount: 220)
+CockpitPersonnelFee.find_or_create_by(name: "Derby Fee", amount: 220)

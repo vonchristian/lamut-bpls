@@ -1,0 +1,5 @@
+<%= simple_form_for [@business_requirement, @verification], url: :business_requirement_verifications do |f| %>
+  <%= f.input :reference_number %>
+  <%= f.input :submission_date, as: :string, input_html: { class: 'datepicker' } %>
+  <%= f.submit "Verify Document" %>
+<% end %>

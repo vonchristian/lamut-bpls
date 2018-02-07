@@ -1,0 +1,47 @@
+<% breadcrumb :special_permit, @special_permit %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-widget widget-user-2">
+      <!-- Add the bg color to the header using any of the bg-* classes -->
+      <div class="widget-user-header">
+        <div class="widget-user-image">
+
+        </div>
+        <!-- /.widget-user-image -->
+        <h3 class="widget-user-username"><%= @special_permit.name.try(:upcase) %></h3>
+
+
+          <h5 class="widget-user-desc">&nbsp; &nbsp; &nbsp; &nbsp; <%=image_tag(@special_permit.taxpayer.avatar.url(:small), height: 35, width: 35, class: "img-circle") %> &nbsp; &nbsp; <%=@special_permit.taxpayer_full_name %></h5>
+
+
+      </div>
+    <div class="nav-tabs-custom">
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+          <small class="text-muted">FEES </small>
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-5">
+                Permit Fee
+              </div>
+              <div class="col-md-3">
+                <%=number_to_currency @special_permit.total_fees %></h4>
+              </div>
+              <div class="col-md-2">
+                <% if @special_permit.assessed? && !@special_permit.paid? %>
+                  <span class="pull-right badge bg-green"> Assessed </span>
+                <% end %>
+                <% if @special_permit.paid? && @special_permit.assessed? %>
+                  <span class="pull-right badge bg-aqua"> Paid </span>
+                <% end %>
+              </div>
+            </div>
+            <hr>
+         <% if !@special_permit.assessed? && policy(:assessment).new? %>
+            <%= link_to 'New Assessment', new_special_permit_assessment_path(@special_permit), class: "btn btn-primary" %>
+          <% end %>
+          <% if !@special_permit.paid? && policy(:payment).new? %>
+             <%= link_to 'New Payment', new_special_permit_payment_path(@special_permit), class: "btn btn-primary" %>
+           <% end %>

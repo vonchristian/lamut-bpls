@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user-2">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header">
+      <div class="widget-user-image">
+        <%=image_tag(@permit.tricycle.taxpayer.avatar.url(:large), class: "img-circle") %>
+      </div>
+      <!-- /.widget-user-image -->
+      <h3 class="widget-user-username">
+        <%=link_to tricycle_path(@permit.tricycle) do %>
+          <%= @permit.tricycle.name.try(:upcase) %></h3>
+          <h5 class="widget-user-desc text-muted"><%= @permit.tricycle.taxpayer_full_name %></h5>
+        <% end %>
+    </div>
+    <div class="box-body">
+      <%=simple_form_for [@permit, @approval], url: :tricycle_permit_application_permit_approvals do |f| %>
+        <%= f.error_notification %>
+        <%= f.input :permit_number %>
+        <%= f.input :date_approved, as: :string, input_html: { class: "datepicker" } %>
+        <%= f.input :remarks %>
+        <div class="box-footer">
+          <%= f.submit "Approve", class: "btn btn-success btn-flat", data: { disable_with: "Approving..."} %>
+        </div>
+      <% end %>

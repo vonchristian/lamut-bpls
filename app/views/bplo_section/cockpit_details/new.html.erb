@@ -1,0 +1,30 @@
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+          <!-- Widget: user widget style 1 -->
+          <div class="box box-widget widget-user-2">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header">
+              <div class="widget-user-image">
+                <%=image_tag(@business.avatar.url(:large), class: "img-circle") %>
+              </div>
+              <!-- /.widget-user-image -->
+                <%=link_to business_path(@business) do %>
+                  <h3 class="widget-user-username" title="Back to business profile page" data-toggle="tooltip" data-placement="left"> <%= @business.name.try(:upcase) %></h3>
+                  <h5 class="widget-user-desc text-muted"><%= @business.taxpayers.distinct.each.map{|a| a.full_name }.join(" | ") %></h5>
+                <% end %>
+            </div>
+            <div class="box-body">
+              <%= simple_form_for [@business, @cockpit_detail], html: { class: "form-horizontal"}, url: :bplo_section_business_cockpit_details, wrapper: :horizontal_form do |f| %>
+               <%= f.error_notification %>
+               <%= f.input :promoter_count, label: "Promoter" %>
+               <%= f.input :pit_manager_count, label: "Pit Manager" %>
+               <%= f.input :referee_count, label: "Referee" %>
+               <%= f.input :bet_taker_count, label: "Bet Taker" %>
+               <%= f.input :bet_manager_count, label: "Bet Manager" %>
+               <%= f.input :gaffer_count, label: "Gaffer" %>
+               <%= f.input :cashier_count, label: "Cashier" %>
+               <%= f.input :derby_count, label: "Derby" %>
+               <div class="box-footer">
+                 <%= f.submit 'Save Details', class: "btn btn-primary btn-flat pull-right" %>
+               </div>
+            <% end %>
