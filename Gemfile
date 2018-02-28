@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
-ruby '2.4.2'
+ruby '2.5.0'
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
 gem 'rails', '5.1.4'
-gem 'pg'
+gem "pg", "~> 0.18"
 gem 'rubyzip', '~> 1.1.0'
 gem 'axlsx', '2.1.0.pre'
 gem 'axlsx_rails'
@@ -56,7 +56,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'database_cleaner'
   gem 'capybara'
-  gem 'capybara-webkit'
+  # gem 'capybara-webkit'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
