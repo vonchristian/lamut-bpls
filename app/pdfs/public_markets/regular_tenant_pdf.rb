@@ -1,4 +1,4 @@
-module PublicMarket
+module PublicMarkets
   class RegularTenantPdf < Prawn::Document
     require 'prawn/table'
     TABLE_WIDTHS = [50, 100, 100, 80, 80 ]
