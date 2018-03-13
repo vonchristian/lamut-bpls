@@ -282,6 +282,9 @@ class Business < ApplicationRecord
   def total_mayors_permit_fees
     Fees::MayorsPermitFee.assessment_for(self)
   end
+  def total_paid_mayors_permit_fees
+    Fees::MayorsPermitFee.paid_amount(self)
+  end
   def total_sanitary_inspection_fee
     Fees::SanitaryInspectionFee.assessment_for(self)
   end

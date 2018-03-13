@@ -10,6 +10,9 @@ module Fees
       paid_amount = self.new.debit_account.credit_entries.payment.where(commercial_document: business).collect{|a| a.credit_amounts.where(account: self.new.debit_account).pluck(:amount).sum}.sum
       business.business_activities.total_fees - paid_amount
     end
+    def self.paid_amount(business)
+      self.new.debit_account.credit_entries.payment.where(commercial_document: business).collect{|a| a.credit_amounts.where(account: self.new.debit_account).pluck(:amount).sum}.sum
+    end
 
     def total_fee
       amount

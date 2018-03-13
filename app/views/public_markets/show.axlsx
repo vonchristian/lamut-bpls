@@ -12,7 +12,7 @@ sheet.add_row ["Date of Registration", "Taxpayer", "Business Type", "Business Na
                     business.competetive_index_categories.pluck(:name).join("/"),
                     (business.business_capital.try(:amount)),
                     business.gross_sales.for_current_year,
-                    (business.total_mayors_permit_fees),
+                    (business.total_paid_mayors_permit_fees),
                     (business.total_paid_business_taxes)]
   end
 end
