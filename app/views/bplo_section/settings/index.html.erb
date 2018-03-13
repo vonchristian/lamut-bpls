@@ -476,6 +476,19 @@
           <% end %>
           <br>
         </div>
+        <div class="box-body">
+          <%=link_to 'New Public Market', new_bplo_section_settings_public_market_path, class: "btn btn-danger btn-xs" %>
+          <hr>
+          <% PublicMarket.all.each do |public_market| %>
+            <div class="row">
+              <div class="col-md-7">
+                <%= public_market.name %><br>
+                <%= public_market.address %>
+              </div>
+            </div>
+            <br>
+            </div>
+          <% end %>
       </div>
     </div>
 

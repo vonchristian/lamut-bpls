@@ -115,6 +115,7 @@ root :to => 'businesses#index', :constraints => lambda { |request| request.env['
     end
     resources :settings, only: [:index]
     namespace :settings do
+      resources :public_markets, only: [:new, :create]
       resources :ownership_types, only: [:new, :create, :edit, :update]
       resources :mode_of_payments, only: [:new, :create, :edit, :update]
       resources :barangays, only: [:new, :create, :edit, :update]

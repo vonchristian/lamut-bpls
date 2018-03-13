@@ -7,7 +7,7 @@ require 'mina/puma'
 set :whenever_name, 'production'
 set :domain, '192.168.8.102'
 set :deploy_to, '/var/www/kiphodan'
-set :repository, 'https://github.com/vonchristian/kiphodan.git'
+set :repository, 'https://github.com/vonchristian/lamut-bpls.git'
 set :branch, 'master'
 set :user, 'deploy'
 set :term_mode, nil

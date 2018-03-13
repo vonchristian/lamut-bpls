@@ -6,7 +6,7 @@ module Businesses
       end
 
       def create?
-        user.bplo_officer?
+        user.bplo_officer? || user.mayors_office_staff?
       end
     end
   end

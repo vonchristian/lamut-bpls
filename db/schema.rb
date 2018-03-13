@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180206221345) do
+ActiveRecord::Schema.define(version: 20180313014844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -713,6 +713,13 @@ ActiveRecord::Schema.define(version: 20180206221345) do
     t.index ["vendor_type"], name: "index_public_market_tenants_on_vendor_type"
   end
 
+  create_table "public_markets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "address"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "business_id"
     t.decimal "monthly_rent"
@@ -784,6 +791,17 @@ ActiveRecord::Schema.define(version: 20180206221345) do
     t.datetime "updated_at", null: false
     t.integer "special_permit_type"
     t.decimal "flat_rate"
+  end
+
+  create_table "stalls", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "public_market_id"
+    t.string "number"
+    t.uuid "business_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_id"], name: "index_stalls_on_business_id"
+    t.index ["number"], name: "index_stalls_on_number"
+    t.index ["public_market_id"], name: "index_stalls_on_public_market_id"
   end
 
   create_table "storage_fees", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1097,6 +1115,8 @@ ActiveRecord::Schema.define(version: 20180206221345) do
   add_foreign_key "revocations", "businesses"
   add_foreign_key "sealing_fees", "businesses"
   add_foreign_key "sec_registrations", "businesses"
+  add_foreign_key "stalls", "businesses"
+  add_foreign_key "stalls", "public_markets"
   add_foreign_key "storage_fees", "fire_dept_collections"
   add_foreign_key "taxpayer_businesses", "businesses"
   add_foreign_key "taxpayer_businesses", "taxpayers"
