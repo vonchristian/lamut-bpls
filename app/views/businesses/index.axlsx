@@ -1,4 +1,4 @@
-wb = xlsx_package.workbook
+ wb = xlsx_package.workbook
 wb.add_worksheet(name: "Businesses") do |sheet|
   sheet.add_row ["Business Name", "Taxpayer", "Status", "Address", "Number of Employees", "Line of Business", "Competetive Index", "Type of Organization", "Area", "Capital", "Gross Sales for Current Year", "Mayors Permit Fees", "Gross Sales Tax"]
   @businesses.each do |business|

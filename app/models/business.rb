@@ -313,6 +313,10 @@ class Business < ApplicationRecord
     Businesses::GrossSale.assessment_for(self)
   end
 
+  def total_paid_business_taxes
+    Businesses::GrossSale.total_paid_taxes(self)
+  end
+
   def total_fees_and_taxes
     total_fees + total_taxes + total_surcharges + total_interests
   end
