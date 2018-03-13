@@ -39,7 +39,10 @@ Permits
         <% end %>
       <% end %>
       <% if business_permit_application.approved? %>
-          <span class="label bg-green"> Approved </span>
+          <span class="label bg-green"> Approved </span> &nbsp; &nbsp;
+          <%= link_to permit_approval_path(business_permit_application.business_permit_approval), method: :delete, data: {confirm: "Are you sure you want to undo this approval?"}  do %>
+          <span title="Undo Approval" data-toggle="tooltip"><i class="fa fa-trash text-danger"></i></span>
+          <% end %>
       <% end %>
     </div>
       <div class="col-md-1">

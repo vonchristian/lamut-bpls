@@ -208,6 +208,12 @@
         <%= link_to 'PDF', business_reports_path(format: 'pdf') %>
         <%= link_to 'EXCEL', business_reports_path(format: 'xlsx') %>
         <small class="help-block"> Generate Report for all businesses. </small>
+        <hr>
+        <h4>Public Markets</h4>
+        <% PublicMarket.all.each do |public_market| %>
+          <%= public_market.name %>
+          <%=link_to 'Excel', public_market_path(public_market, format: 'xlsx') %>
+        <% end %>
       </div>
     </div>
   </div>

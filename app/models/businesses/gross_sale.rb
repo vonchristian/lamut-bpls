@@ -13,7 +13,7 @@ module Businesses
 
     delegate :gross_sales_entered_on?, to: :business, allow_nil: true
     before_validation :set_date
-    after_commit :set_tax, if: :persisted?
+    before_save :set_tax
 
     def self.for(business)
       all.where(business: business)

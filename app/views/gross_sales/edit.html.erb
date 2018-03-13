@@ -4,7 +4,8 @@
       <div class="box-header with-border">
         <div class="widget-user-header">
 
-          <h3 class="widget-user-username"><%#= @business.name.upcase %></h3>
+          <h3 class="widget-user-username"><%= @gross_sale.business.name.upcase %></h3>
+          <p class="text-muted"><%= @gross_sale.business.gross_sales_tax_business_category.try(:name) %></p>
           <%# @business.taxpayers.distinct.each do |taxpayer| %>
             <h5 class="widget-user-desc"><%#=image_tag(taxpayer.avatar.url(:small), class: "img-circle") %> &nbsp; &nbsp; <%#=taxpayer.full_name %></h5>
           <%# end %>

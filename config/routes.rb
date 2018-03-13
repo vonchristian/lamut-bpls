@@ -92,6 +92,7 @@ root :to => 'businesses#index', :constraints => lambda { |request| request.env['
       resources :occupancy_permit_fees, only: [:new, :create], module: :businesses
       resources :documentary_stamp_fees, only: [:new, :create, :edit], module: :businesses
       resources :sealing_fees, only: [:new, :create], module: :businesses
+      resources :stalls, only: [:new, :create], module: :businesses
 
     end
     resources :business_activities, only: [:show] do
@@ -230,5 +231,6 @@ root :to => 'businesses#index', :constraints => lambda { |request| request.env['
   resources :zoning_fees, only: [:edit, :update]
   resources :addresses, only: [:edit, :update]
   resources :gross_sales, only: [:edit, :update]
-
+  resources :public_markets, only: [:show]
+  resources :permit_approvals, only: [:destroy]
 end

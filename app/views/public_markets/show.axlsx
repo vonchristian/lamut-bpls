@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "ALL BUSINESSES") do |sheet|
+sheet.add_row ["Date of Registration", "Taxpayer", "Business Type", "Business Name",  "Business Address", "# of Employees", "Line of Business", "Classification", "Capital", "Gross Sales", "Mayors Permit Fee", "Business Tax"]
+  @public_market.businesses.each do |business|
+    sheet.add_row  [business.date_registered,
+                    business.taxpayers_full_name.try(:upcase),
+                    business.business_status,
+                    business.name.try(:upcase),
+                    business.full_address,
+                    business.employee_count.try(:number),
+                    business.line_of_businesses_name,
+                    business.competetive_index_categories.pluck(:name).join("/"),
+                    (business.business_capital.try(:amount)),
+                    business.gross_sales.for_current_year,
+                    (business.total_mayors_permit_fees),
+                    (business.total_paid_business_taxes)]
+  end
+end

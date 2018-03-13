@@ -68,6 +68,8 @@ class Business < ApplicationRecord
   has_many :verifications, through: :business_requirements, class_name: "Businesses::BusinessRequirements::Verification"
   has_many :payment_schedules, dependent: :destroy
   has_many :competetive_index_categories, through: :line_of_businesses
+  has_many :stalls, dependent: :destroy
+  has_many :public_markets, through: :stalls
 
   validates :ownership_type, :mode_of_payment, presence: true
   validates :gross_sales_tax_business_category, presence: true

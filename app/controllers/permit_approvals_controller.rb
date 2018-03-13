@@ -10,10 +10,15 @@ class PermitApprovalsController < ApplicationController
     @approval = @business_permit_application.create_business_permit_approval(approval_params)
     @approval.approver = current_user
     if @approval.save
-      redirect_to business_url(@business_permit_application.business), notice: "Permit approved successfully."
+      redirect_to business_business_permits_url(@business_permit_application.business), notice: "Permit approved successfully."
     else
       render :new
     end
+  end
+  def destroy
+    @permit_approval = Businesses::BusinessPermits::BusinessPermitApproval.find(params[:id])
+    @permit_approval.destroy
+    redirect_to business_business_permits_url(@permit_approval.business), notice: "Undo successfully"
   end
 
   private

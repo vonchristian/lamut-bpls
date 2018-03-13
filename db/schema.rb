@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180313014844) do
+ActiveRecord::Schema.define(version: 20180313022935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -799,9 +799,11 @@ ActiveRecord::Schema.define(version: 20180313014844) do
     t.uuid "business_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "stall_type"
     t.index ["business_id"], name: "index_stalls_on_business_id"
     t.index ["number"], name: "index_stalls_on_number"
     t.index ["public_market_id"], name: "index_stalls_on_public_market_id"
+    t.index ["stall_type"], name: "index_stalls_on_stall_type"
   end
 
   create_table "storage_fees", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

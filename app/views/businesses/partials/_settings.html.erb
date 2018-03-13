@@ -46,4 +46,18 @@
   </div>
   <hr>
 <% end %>
+<h4 class="box-title"> Public Market Settings </h4>
+    <% @business.stalls.each do |stall| %>
+      <%= stall.public_market_name %><br>
+      <span class="badge bg-gree"><%= stall.stall_type %></span>
+      <br>
+    <% end %>
+<div class="row">
+  <div class="col-md-8">
+    <hr>
+    <p class="text-muted"> Add this business to market. </p>
+    <%= link_to 'Add to Market', new_bplo_section_business_stall_path(@business), class: "btn btn-danger" %>
+
+  </div>
+</div>
 </div>
