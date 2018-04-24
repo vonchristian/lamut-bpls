@@ -62,7 +62,7 @@ module PublicMarkets
     def table_data
       move_down 5
       [["Taxpayer", "Business Type", "Business Name",  "Business Address", "Line of Business", "Mayors Permit Fee", "Business Tax"]] +
-      @table_data ||= @businesses.map { |e| [ e.taxpayers_full_name.try(:upcase), e.business_type.try(:gsub, 'Application', ''), e.name.try(:upcase),  e.full_address, e.line_of_businesses_name, e.total_mayors_permit_fees, e.total_gross_sales_taxes] }
+      @table_data ||= @businesses.map { |e| [ e.taxpayers_full_name.try(:upcase), e.business_type.try(:gsub, 'Application', ''), e.name.try(:upcase),  e.full_address, e.line_of_businesses_name, e.total_paid_mayors_permit_fees, e.total_paid_business_taxes] }
     end
 
   end

@@ -1,3 +1,8 @@
+reporting
+  select attributes
+  select barangay
+  print format pdf, excel
+
 Backlog
 
 validates minimum_gross_sale if tax_type == fixed_amount
