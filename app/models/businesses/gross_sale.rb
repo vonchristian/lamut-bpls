@@ -29,20 +29,19 @@ module Businesses
       pluck(:tax_amount).compact.sum
     end
     def self.total_paid_taxes(options={})
-      if options[:from_date] && options[:to_date]
-        date_range = DateRange.new(from_date: options[:from_date], to_date: options[:to_date])
-        where('date' => (date_range.start_date..date_range.end_date)).sum(:tax_amount)
-      else
-        sum(:tax_amount)
-      end
+     self.new.credit_account.credits_balance(options)
     end
 
-    def self.total_paid_taxes(business)
-      Accounting::Account.find_by(name: "Accounts Receivable - Business Tax").credit_entries.payment.where(commercial_document: business).collect{|a| a.credit_amounts.where(account: Accounting::Account.find_by(name: "Accounts Receivable - Business Tax")).pluck(:amount).sum}.sum
+    def debit_account
+      Accounting::Account.find_by(name: "Accounts Receivable - Business Tax")
+    end
+    def credit_account
+      Accounting::Revenue.find_by(name: "Business Tax")
     end
 
     def self.assessment_for(business)
-      business.gross_sales.taxes_for_current_year - total_paid_taxes(business)
+      business.gross_sales.taxes_for_current_year -
+      total_paid_taxes(commercial_document: business, from_date: Date.today.beginning_of_year, to_date: Date.today.end_of_year)
     end
 
     def self.total_tax

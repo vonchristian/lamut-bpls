@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180313022935) do
+ActiveRecord::Schema.define(version: 20180423135748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,7 +70,10 @@ ActiveRecord::Schema.define(version: 20180313022935) do
     t.decimal "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "commercial_document_type"
+    t.uuid "commercial_document_id"
     t.index ["account_id"], name: "index_amounts_on_account_id"
+    t.index ["commercial_document_type", "commercial_document_id"], name: "index_commercial_document_on_amounts"
     t.index ["entry_id"], name: "index_amounts_on_entry_id"
     t.index ["type"], name: "index_amounts_on_type"
   end
@@ -257,6 +260,7 @@ ActiveRecord::Schema.define(version: 20180313022935) do
     t.uuid "public_market_tenant_id"
     t.boolean "public_market_vendor", default: false
     t.boolean "owned_by_women", default: false
+    t.boolean "is_transient", default: false
     t.index ["gross_sales_tax_business_category_id"], name: "index_on_gross_tax_business_category"
     t.index ["gross_sales_tax_config_id"], name: "index_businesses_on_gross_sales_tax_config_id"
     t.index ["lessor_id"], name: "index_businesses_on_lessor_id"

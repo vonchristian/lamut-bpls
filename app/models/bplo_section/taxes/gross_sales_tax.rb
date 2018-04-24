@@ -36,14 +36,14 @@ module BploSection
         elsif tax.tax_type_percentage?
           gross_sales_tax_for_tax_type_percentage(gross_sale, tax)
         elsif tax.tax_type_percentage_with_tax_on_excess?
-          tax_for_excess(gross_sales, tax)
+          tax_for_excess(gross_sale, tax)
         end
       end
 
       private
       def self.find_applicable(gross_sale)
         tax = gross_sale.business.gross_sales_tax_business_category.gross_sales_taxes.
-        select{ |a| a.amount_range.include?(gross_sale.amount) }.first
+        select { |a| a.amount_range.include?(gross_sale.amount) }.first
         gross_sale.tax_amount = tax.find_applicable_tax(gross_sale, tax)
       end
 
@@ -55,11 +55,21 @@ module BploSection
 
       def gross_sales_tax_for_tax_type_percentage(gross_sale, gross_sales_tax)
         amount = gross_sale.amount * gross_sales_tax.tax_rate
-        if amount < gross_sales_tax.minimum_tax_amount
-          gross_sales_tax.minimum_tax_amount
+        if gross_sales_tax.minimum_tax_amount.present?
+          if amount < gross_sales_tax.minimum_tax_amount
+            gross_sales_tax.minimum_tax_amount
+          else
+            amount
+          end
         else
           amount
         end
+      end
+      def tax_for_excess(gross_sale, tax)
+        excess = gross_sale.amount - tax.gross_limit
+        regular_tax = gross_limit * tax_rate
+        excess_tax = excess * tax_rate_for_excess
+        regular_tax + excess_tax
       end
     end
   end

@@ -204,6 +204,9 @@
         <%= link_to 'List of Businesses Owned By Women', owned_by_women_business_reports_path(format: 'pdf') %>
         <small class="help-block"> Generate Report for businesses owned by women. </small>
         <hr>
+         <%= link_to 'List of Transient Busineses', transient_business_reports_path(format: 'pdf') %>
+        <small class="help-block"> Generate Report for transient businesses. </small>
+        <hr>
         <h4>List of All Businesses</h4>
         <%= link_to 'PDF', business_reports_path(format: 'pdf') %>
         <%= link_to 'EXCEL', business_reports_path(format: 'xlsx') %>
@@ -585,10 +588,10 @@
       <h3 class="box-title"> Public Market Vendors </h3>
     </div>
     <div class="box-body">
-      <%= link_to 'Regular Tenants', public_market_regular_tenants_path(format: 'pdf') %>
+      <%= link_to 'Regular Tenants', public_markets_regular_tenants_path(format: 'pdf') %>
       <small class="help-block"> Generate Report of Regular Tenants. </small>
       <hr>
-      <%= link_to 'Transient Tenants', public_market_transient_tenants_path(format: 'pdf') %>
+      <%= link_to 'Transient Tenants', public_markets_transient_tenants_path(format: 'pdf') %>
       <small class="help-block"> Generate Report of Transient Tenants. </small>
   </div>
 </div>

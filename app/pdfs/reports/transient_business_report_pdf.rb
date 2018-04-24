@@ -1,14 +1,13 @@
 module Reports
-  class CmciPdf < Prawn::Document
+  class TransientBusinessReportPdf < Prawn::Document
     require 'prawn/table'
     TABLE_WIDTHS = [50, 160, 120, 100, 100 ]
 
-    def initialize(businesses, from_date, to_date, view_context)
+    def initialize(businesses, barangay, view_context)
       super(page_size: 'LEGAL', margin: 20, page_layout: :landscape)
 
       @businesses = businesses
-      @from_date = from_date
-      @to_date = to_date
+      @barangay = barangay
       @view_context = view_context
       heading
       logo
@@ -28,15 +27,9 @@ module Reports
       text 'BUSINESS PERMITS LICENSING OFFICE', size: 8, align: :center, style: :bold
       move_down 10
       if @barangay.present?
-        text "LIST OF REGISTERED BUSINESSES IN #{@barangay.name.upcase}", align: :center, size: 10, style: :bold
-      elsif @line_of_business.present?
-        text "LIST OF BUSINESSES UNDER #{@line_of_business.name.upcase}", align: :center, size: 10, style: :bold
+        text "TRANSIENT BUSINESSES IN #{@barangay.name.try(:upcase)}", align: :center, size: 10, style: :bold
       else
-        text "LIST OF BUSINESSES IN LAMUT", align: :center, size: 10, style: :bold
-
-      end
-      if @from_date && @to_date
-        text "From: #{@from_date.strftime("%B %e, %Y")} To: #{@to_date.strftime("%B %e, %Y")}", size: 8, align: :center, style: :bold
+        text "TRANSIENT BUSINESSES IN LAMUT", align: :center, size: 10, style: :bold
       end
       move_down 10
     end
@@ -64,7 +57,7 @@ module Reports
     def table_data
       move_down 5
       [["Date of Registration", "Taxpayer", "Business Type", "Business Name",  "Business Address", "# of Employees", "Line of Business", "Classification", "Capital", "Gross Sales", "Mayors Permit Fee", "Business Tax"]] +
-      @table_data ||= @businesses.map { |e| [e.date_registered, e.taxpayers_full_name.try(:upcase), e.business_status, e.name.try(:upcase),  e.full_address, e.employee_count.try(:number), e.line_of_businesses_name, e.competetive_index_categories.pluck(:name).join("/"), price(e.business_capital.try(:amount)), e.gross_sales.for_current_year, price(e.total_paid_mayors_permit_fees), price(e.total_paid_business_taxes)] }
+      @table_data ||= @businesses.map { |e| [e.date_registered, e.taxpayers_full_name, e.business_status, e.name.try(:upcase),  e.full_address, e.employee_count.try(:number), e.line_of_businesses_name, e.competetive_index_categories.pluck(:name).join("/"), price(e.business_capital.try(:amount)), e.gross_sales.for_current_year, price(e.total_mayors_permit_fees), price(e.total_gross_sales_taxes)] }
     end
 
   end

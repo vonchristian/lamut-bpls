@@ -275,10 +275,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount }, as: :hidden %>
                       <%=d.input :account_id, input_html: {value:  Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden%>
+                      <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: fee.amount },  as: :hidden %>
                       <%=c.input :account_id, input_html: { value: fee.debit_account.id },  as: :hidden %>
+                      <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
                 <% end %>
@@ -287,30 +293,48 @@
                   <%=f.simple_fields_for :debit_amounts do |d|  %>
                     <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.mayors_permit_fees.total },  as: :hidden %>
                     <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id},  as: :hidden%>
+                    <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                    <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                   <% end %>
                   <%=f.simple_fields_for :credit_amounts do |c|  %>
                     <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.mayors_permit_fees.total },  as: :hidden %>
                     <%=c.input :account_id, input_html: { value: Fees::MayorsPermitFee.new.debit_account.id },  as: :hidden %>
+                   <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                   <% end %>
                 <% end %>
                   <!--Sanitary Permit Fee -->
                   <%=f.simple_fields_for :debit_amounts do |d|  %>
                     <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.business_area_fee },  as: :hidden %>
                     <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden%>
+                  <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                   <% end %>
                   <%=f.simple_fields_for :credit_amounts do |c|  %>
                     <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.business_area_fee}, as: :hidden %>
                     <%=c.input :account_id, input_html: { value: Fees::SanitaryInspectionFee.new.debit_account.id },  as: :hidden %>
+                   <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                   <% end %>
                   <!-- Storage Permit Fee -->
                     <% if @business.has_storage_permit_fee? %>
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.storage_permit_fees.total },  as: :hidden %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id },  as: :hidden%>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.storage_permit_fees.total}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::StoragePermitFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
                   <!-- Building Permit Fee -->
@@ -318,10 +342,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.building_permit_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.building_permit_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::BuildingPermitFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
                   <!-- Zoning Fee -->
@@ -329,10 +359,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.zoning_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.zoning_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::ZoningFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -341,10 +377,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.annual_inspection_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.annual_inspection_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::AnnualInspectionFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -353,10 +395,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.occupancy_permit_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.occupancy_permit_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::OccupancyPermitFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -365,10 +413,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.electrical_installation_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.electrical_installation_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::ElectricalInstallationFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -377,10 +431,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.plumbing_installation_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.plumbing_installation_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::PlumbingInstallationFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -389,10 +449,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.other_accessories_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.other_accessories_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::OtherAccessoriesFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -401,10 +467,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.engineering_penalties.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.engineering_penalties.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::EngineeringPenalty.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -413,10 +485,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.documentary_stamp_fees.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.documentary_stamp_fees.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Fees::DocumentaryStampFee.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -425,10 +503,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.surcharges.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.surcharges.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Businesses::Surcharge.new.debit_account.id }, as: :hidden  %>
+                    <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -437,11 +521,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.late_registration_interests.for_current_year }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+ <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
 
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.late_registration_interests.for_current_year}, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Businesses::LateRegistrationInterest.new.debit_account.id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 
@@ -451,10 +540,16 @@
                     <%# if @business.annually? %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.gross_sales.total_tax, id: 'business-tax-form-debit-entry' }, label: "Business Tax"  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.gross_sales.total_tax, id: 'business-tax-form-credit-entry' }, as: :hidden %>
                       <%=c.input :account_id, input_html: { value: Accounting::Account.find_by_name("Accounts Receivable - Business Tax").id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
                   <!-- Cockpit Operation Fees-->
@@ -462,10 +557,16 @@
                     <%=f.simple_fields_for :debit_amounts do |d|  %>
                       <%=d.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.total_cockpit_operation_fees }, as: :hidden  %>
                       <%=d.input :account_id, input_html: {value: Accounting::Account.find_by_name("Cash - Local Treasury").id }, as: :hidden %>
+                       <%= d.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= d.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                     <%=f.simple_fields_for :credit_amounts do |c|  %>
                       <%=c.input :amount, input_html: {autocomplete: "off", class: "input-lg", value: @business.total_cockpit_operation_fees }, as: :hidden  %>
                       <%=c.input :account_id, input_html: { value: Accounting::Account.find_by_name("Accounts Receivable - Cockpit Operation Fees").id }, as: :hidden  %>
+                     <%= c.input :commercial_document_id, input_html: { value: @business.id }, as: :hidden %>
+                      <%= c.input :commercial_document_type, input_html: { value: @business.class.to_s }, as: :hidden %>
+
                     <% end %>
                   <% end %>
 

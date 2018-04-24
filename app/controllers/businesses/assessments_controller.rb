@@ -28,7 +28,9 @@ module Businesses
     end
 
     private def entry_params
-      params.require(:accounting_entry).permit(:reference_number, :description, :entry_date, credit_amounts_attributes: [:amount, :account_id, :id], debit_amounts_attributes: [:amount, :account_id, :id] )
+      params.require(:accounting_entry).permit(:reference_number, :description, :entry_date,
+        credit_amounts_attributes: [:amount, :account_id, :id, :commercial_document_id, :commercial_document_type],
+        debit_amounts_attributes: [:amount, :account_id, :id, :commercial_document_id, :commercial_document_type] )
     end
   end
   end

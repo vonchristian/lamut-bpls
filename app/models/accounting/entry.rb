@@ -9,8 +9,8 @@ module Accounting
     belongs_to :barangay, class_name: "Addresses::Barangay"
     belongs_to :recorder, class_name: "User", foreign_key: 'user_id'
     has_one :fire_dept_collection, dependent: :destroy
-    has_many :credit_amounts, :extend => AmountsExtension, :class_name => 'Accounting::CreditAmount', :inverse_of => :entry, dependent: :destroy
-    has_many :debit_amounts, :extend => AmountsExtension, :class_name => 'Accounting::DebitAmount', :inverse_of => :entry, dependent: :destroy
+    has_many :credit_amounts, :extend => Accounting::AmountsExtension, :class_name => 'Accounting::CreditAmount', :inverse_of => :entry, dependent: :destroy
+    has_many :debit_amounts, :extend => Accounting::AmountsExtension, :class_name => 'Accounting::DebitAmount', :inverse_of => :entry, dependent: :destroy
     has_many :credit_accounts, :through => :credit_amounts, :source => :account, :class_name => 'Accounting::Account'
     has_many :debit_accounts, :through => :debit_amounts, :source => :account, :class_name => 'Accounting::Account'
 

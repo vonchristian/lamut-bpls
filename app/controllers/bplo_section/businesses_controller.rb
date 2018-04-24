@@ -41,7 +41,7 @@ module BploSection
 
     private
     def business_params
-      params.require(:business).permit(:public_market_vendor, :public_market_tenant_id, :business_tax_exempted, :avatar, :name, :ownership_type_id, :mode_of_payment_id,:gross_sales_tax_business_category_id, :gross_sales_tax_config_id, :deals_only_with_essential_commodities,
+      params.require(:business).permit(:is_transient, :public_market_vendor, :public_market_tenant_id, :business_tax_exempted, :avatar, :name, :ownership_type_id, :mode_of_payment_id,:gross_sales_tax_business_category_id, :gross_sales_tax_config_id, :deals_only_with_essential_commodities,
                                        :business_area_attributes => [:area, :rented, :id],
                                        :employee_count_attributes => [:number, :id],
                                        :addresses_attributes => [:id, :street, :barangay_id, :municipality_or_city_id, :province_id],

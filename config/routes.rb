@@ -160,7 +160,7 @@ root :to => 'businesses#index', :constraints => lambda { |request| request.env['
   resources :dti_registrations, only: [:edit, :update], module: :registrations
   resources :sec_registrations, only: [:edit, :update], module: :registrations
   resources :cda_registrations, only: [:edit, :update], module: :registrations
-  namespace :public_market do
+  namespace :public_markets do
     resources :transient_tenants, only: [:index]
     resources :regular_tenants, only: [:index]
   end
@@ -187,6 +187,8 @@ root :to => 'businesses#index', :constraints => lambda { |request| request.env['
   end
   resources :special_permit_applications, only: [:new, :create]
   resources :registered_business_reports, only: [:index]
+  resources :transient_business_reports, only: [:index]
+
   resources :unregistered_business_reports, only: [:index]
   resources :retired_business_reports, only: [:index]
   resources :owned_by_women_business_reports, only: [:index]

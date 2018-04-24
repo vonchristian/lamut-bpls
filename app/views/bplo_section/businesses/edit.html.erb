@@ -61,7 +61,9 @@
             <hr>
             <p class="text-muted"> Exemptions </p>
             <%= f.input :business_tax_exempted, as: :boolean %>
+
             <hr>
+            <%= f.input :is_transient, as: :boolean %>
             <p class="text-muted"> For Public Market Vendors </p>
 
             <%= f.input :public_market_vendor, input_html: { id: 'business_public_market_vendor' } %>

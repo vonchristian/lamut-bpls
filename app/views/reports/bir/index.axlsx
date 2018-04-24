@@ -1,7 +1,7 @@
 wb = xlsx_package.workbook
 wb.add_worksheet(name: "BIR Report") do |sheet|
 sheet.add_row ["Date of Registration", "Taxpayer", "Business Type", "Business Name",  "Business Address", "Line of Business"]
-  @businesses.each do |business|
+  @businesses.each do |e|
     sheet.add_row [e.date_registered, e.taxpayers_full_name.try(:upcase), e.business_status, e.name.try(:upcase),  e.full_address, e.line_of_businesses_name]
   end
 end

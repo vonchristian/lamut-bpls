@@ -64,7 +64,19 @@ module Reports
     def table_data
       move_down 5
       [["Date of Registration", "Taxpayer", "Business Type", "Business Name",  "Business Address", "# of Employees", "Line of Business", "Classification", "Capital", "Gross Sales", "Mayors Permit Fee", "Business Tax"]] +
-      @table_data ||= @businesses.map { |e| [e.date_registered, e.taxpayers_full_name, e.business_status, e.name.try(:upcase),  e.full_address, e.employee_count.try(:number), e.line_of_businesses_name, e.competetive_index_categories.pluck(:name).join("/"), price(e.business_capital.try(:amount)), e.gross_sales.for_current_year, price(e.total_mayors_permit_fees), price(e.total_gross_sales_taxes)] }
+      @table_data ||= @businesses.map { |e| [
+        e.date_registered,
+        e.taxpayers_full_name,
+        e.business_status,
+        e.name.try(:upcase),
+        e.full_address,
+        e.employee_count.try(:number),
+        e.line_of_businesses_name,
+        e.competetive_index_categories.pluck(:name).join("/"),
+        price(e.business_capital.try(:amount)),
+        e.gross_sales.total_paid_taxes(commercial_document: e),
+        price(e.total_paid_mayors_permit_fees),
+        price(e.total_paid_business_taxes)] }
     end
 
   end

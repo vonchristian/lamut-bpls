@@ -95,6 +95,12 @@ class Business < ApplicationRecord
 
   # def for_fire_department_total
   # end
+  def self.transient
+     where(is_transient: true)
+  end
+  def self.not_transient
+    where.not(is_transient: true)
+  end
   def self.in(barangay)
     all.select{|a| a.barangay == barangay}
   end
@@ -282,8 +288,8 @@ class Business < ApplicationRecord
   def total_mayors_permit_fees
     Fees::MayorsPermitFee.assessment_for(self)
   end
-  def total_paid_mayors_permit_fees
-    Fees::MayorsPermitFee.paid_amount(self)
+  def total_paid_mayors_permit_fees(options={})
+    Fees::MayorsPermitFee.paid_amount(commercial_document: self, from_date: options[:from_date], to_date: options[:to_date])
   end
   def total_sanitary_inspection_fee
     Fees::SanitaryInspectionFee.assessment_for(self)
@@ -318,8 +324,8 @@ class Business < ApplicationRecord
     Businesses::GrossSale.assessment_for(self)
   end
 
-  def total_paid_business_taxes
-    Businesses::GrossSale.total_paid_taxes(self)
+  def total_paid_business_taxes(options={})
+    Businesses::GrossSale.total_paid_taxes(commercial_document: self, from_date: options[:from_date], to_date: options[:to_date])
   end
 
   def total_fees_and_taxes
