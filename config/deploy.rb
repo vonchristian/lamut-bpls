@@ -83,7 +83,7 @@ task :deploy => :remote_environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    invoke :'bundle_exec:bundle:install'
+    invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
