@@ -2,7 +2,7 @@ module Accounting
   class Amount < ActiveRecord::Base
     belongs_to :entry, :class_name => 'Accounting::Entry', touch: true
     belongs_to :account, :class_name => 'Accounting::Account', touch: true
-    belongs_to :commercial_document, polymorphic: true, touch: true
+    belongs_to :commercial_document, polymorphic: true
 
     validates :type, :amount, :entry, :account, presence: true
     validates :amount, numericality: true
