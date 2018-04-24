@@ -4,7 +4,7 @@ git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
-# gem 'chronic'
+gem 'chronic'
 gem 'rails', '5.1.4'
 gem "pg", "~> 0.18"
 gem 'rubyzip', '~> 1.1.0'
@@ -60,7 +60,6 @@ group :test do
   # gem 'capybara-webkit'
 end
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'rack-mini-profiler'
 gem 'memory_profiler'
 gem 'bullet'
