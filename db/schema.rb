@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180423135748) do
+ActiveRecord::Schema.define(version: 20180914031837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,7 +72,9 @@ ActiveRecord::Schema.define(version: 20180423135748) do
     t.datetime "updated_at", null: false
     t.string "commercial_document_type"
     t.uuid "commercial_document_id"
+    t.integer "amount_type"
     t.index ["account_id"], name: "index_amounts_on_account_id"
+    t.index ["amount_type"], name: "index_amounts_on_amount_type"
     t.index ["commercial_document_type", "commercial_document_id"], name: "index_commercial_document_on_amounts"
     t.index ["entry_id"], name: "index_amounts_on_entry_id"
     t.index ["type"], name: "index_amounts_on_type"

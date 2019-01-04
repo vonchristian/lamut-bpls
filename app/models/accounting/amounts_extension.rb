@@ -25,7 +25,7 @@ module Accounting
     end
 
     def balance_for(options={})
-      joins(:entry, :account).
+      joins(:entry).
       where(commercial_document: options[:commercial_document])
     end
 

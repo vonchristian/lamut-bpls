@@ -3,16 +3,19 @@ wb.add_worksheet(name: "ALL BUSINESSES") do |sheet|
 sheet.add_row ["Date of Registration", "Taxpayer", "Business Type", "Business Name",  "Business Address", "# of Employees", "Line of Business", "Classification", "Capital", "Gross Sales", "Mayors Permit Fee", "Business Tax"]
   @businesses.each do |business|
     sheet.add_row  [business.date_registered,
-                    business.taxpayers_full_name.try(:upcase),
+                    business.taxpayers.last.first_name),
+                    business.taxpayers.last.middle_name),
+                    business.taxpayers.last.last_name),
+                    business.ownership_type.name),
                     business.business_status,
-                    business.name.try(:upcase),
+                    business.name,
+                    business.gross_sales_tax_category.name,
                     business.full_address,
                     business.employee_count.try(:number),
                     business.line_of_businesses_name,
-                    business.competetive_index_categories.pluck(:name).join("/"),
+                    business.competetive_index_categories.pluck(:name).join(","),
                     (business.business_capital.try(:amount)),
-                    business.gross_sales.for_current_year,
-                    (business.total_paid_mayors_permit_fees),
-                    (business.total_paid_business_taxes)]
+                    business.gross_sales.for_current_year
+                    ]
   end
 end

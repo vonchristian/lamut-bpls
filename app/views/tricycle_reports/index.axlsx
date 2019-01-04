@@ -1,0 +1,14 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Tricycle Report") do |sheet|
+sheet.add_row ["Last Name", "First Name", "Middle Name", "Plate Number",  "MTOP Number", "Tricycle Organization", "Type"]
+  @tricycles.each do |e|
+    sheet.add_row  [
+    e.taxpayer.try(:last_name),
+    e.taxpayer.try(:first_name),
+    e.taxpayer.try(:middle_name),
+    e.plate_number,
+    e.mtop_number,
+    e.tricycle_organization.try(:name),
+    e.status]
+  end
+end
